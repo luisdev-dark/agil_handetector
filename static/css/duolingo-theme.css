@@ -1,0 +1,592 @@
+/* ============================================
+   DUOLINGO-INSPIRED THEME SYSTEM
+   Modern, vibrant design system for ASL Learning
+   ============================================ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ============================================ */
+
+:root {
+  /* ===== PRIMARY COLORS (Duolingo Palette) ===== */
+  --duo-green: #58CC02;           /* Success, correct answers, primary CTA */
+  --duo-green-dark: #46A302;      /* Hover state for green */
+  --duo-green-light: #89E219;     /* Light accent */
+  
+  --duo-blue: #1CB0F6;            /* Primary brand, links, info */
+  --duo-blue-dark: #1899D6;       /* Hover state for blue */
+  --duo-blue-light: #4FC3F7;      /* Light accent */
+  
+  --duo-red: #FF4B4B;             /* Errors, warnings, danger */
+  --duo-red-dark: #EA2B2B;        /* Hover state for red */
+  --duo-red-light: #FF6B6B;       /* Light accent */
+  
+  --duo-yellow: #FFC800;          /* Streak, highlights, bonus */
+  --duo-yellow-dark: #E0B000;     /* Hover state for yellow */
+  --duo-yellow-light: #FFD740;    /* Light accent */
+  
+  --duo-purple: #CE82FF;          /* Special features, premium */
+  --duo-purple-dark: #B565E8;     /* Hover state for purple */
+  --duo-purple-light: #E0A7FF;    /* Light accent */
+  
+  --duo-orange: #FF9600;          /* Urgency, time-based features */
+  --duo-orange-dark: #E08600;     /* Hover state for orange */
+  --duo-orange-light: #FFB340;    /* Light accent */
+
+  /* ===== NEUTRAL COLORS ===== */
+  --duo-white: #FFFFFF;
+  --duo-gray-50: #F7F7F7;         /* Lightest gray - backgrounds */
+  --duo-gray-100: #E5E5E5;        /* Light gray - borders, dividers */
+  --duo-gray-200: #D1D1D1;        /* Medium-light gray */
+  --duo-gray-300: #AFAFAF;        /* Medium gray */
+  --duo-gray-400: #8E8E8E;        /* Medium-dark gray */
+  --duo-gray-500: #777777;        /* Dark gray - secondary text */
+  --duo-gray-600: #4B4B4B;        /* Darker gray */
+  --duo-gray-700: #3C3C3C;        /* Very dark gray */
+  --duo-gray-800: #2B2B2B;        /* Almost black - primary text */
+  --duo-gray-900: #1F1F1F;        /* Darkest - headings */
+  --duo-black: #000000;
+
+  /* ===== SEMANTIC COLORS ===== */
+  --color-success: var(--duo-green);
+  --color-error: var(--duo-red);
+  --color-warning: var(--duo-yellow);
+  --color-info: var(--duo-blue);
+
+  /* ===== SHADOWS ===== */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+  
+  /* Colored shadows for emphasis */
+  --shadow-green: 0 4px 12px rgba(88, 204, 2, 0.3);
+  --shadow-blue: 0 4px 12px rgba(28, 176, 246, 0.3);
+  --shadow-red: 0 4px 12px rgba(255, 75, 75, 0.3);
+  --shadow-yellow: 0 4px 12px rgba(255, 200, 0, 0.3);
+  --shadow-purple: 0 4px 12px rgba(206, 130, 255, 0.3);
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-full: 9999px;
+
+  /* ===== SPACING SCALE ===== */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+  --transition-slower: 500ms ease;
+  
+  /* Easing functions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-family-base: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+  
+  /* Font sizes */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+  --text-5xl: 3rem;        /* 48px */
+  --text-6xl: 3.75rem;     /* 60px */
+  
+  /* Font weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  
+  /* Line heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* ===== Z-INDEX SCALE ===== */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-notification: 1080;
+  --z-max: 9999;
+}
+
+/* ============================================
+   BUTTON COMPONENTS (Duolingo Style)
+   ============================================ */
+
+/* Base button styles */
+.btn-duo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-family-base);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.btn-duo:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btn-duo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary button (Green) */
+.btn-primary {
+  background: var(--duo-green);
+  color: var(--duo-white);
+  border-bottom: 4px solid var(--duo-green-dark);
+}
+
+.btn-primary:hover {
+  background: var(--duo-green-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-green);
+}
+
+/* Secondary button (Blue) */
+.btn-secondary {
+  background: var(--duo-blue);
+  color: var(--duo-white);
+  border-bottom: 4px solid var(--duo-blue-dark);
+}
+
+.btn-secondary:hover {
+  background: var(--duo-blue-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-blue);
+}
+
+/* Danger button (Red) */
+.btn-danger {
+  background: var(--duo-red);
+  color: var(--duo-white);
+  border-bottom: 4px solid var(--duo-red-dark);
+}
+
+.btn-danger:hover {
+  background: var(--duo-red-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-red);
+}
+
+/* Warning button (Yellow) */
+.btn-warning {
+  background: var(--duo-yellow);
+  color: var(--duo-gray-900);
+  border-bottom: 4px solid var(--duo-yellow-dark);
+}
+
+.btn-warning:hover {
+  background: var(--duo-yellow-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-yellow);
+}
+
+/* Outline button */
+.btn-outline {
+  background: var(--duo-white);
+  color: var(--duo-gray-800);
+  border: 2px solid var(--duo-gray-200);
+  box-shadow: none;
+}
+
+.btn-outline:hover {
+  background: var(--duo-gray-50);
+  border-color: var(--duo-gray-300);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Ghost button */
+.btn-ghost {
+  background: transparent;
+  color: var(--duo-gray-700);
+  box-shadow: none;
+  border-bottom: none;
+}
+
+.btn-ghost:hover {
+  background: var(--duo-gray-100);
+}
+
+/* Button sizes */
+.btn-sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+}
+
+.btn-lg {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-2xl);
+}
+
+.btn-xl {
+  padding: var(--space-5) var(--space-10);
+  font-size: var(--text-xl);
+  border-radius: var(--radius-2xl);
+}
+
+/* Full width button */
+.btn-block {
+  width: 100%;
+  display: flex;
+}
+
+/* ============================================
+   CARD COMPONENTS
+   ============================================ */
+
+/* Base card */
+.card-duo {
+  background: var(--duo-white);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  border: 2px solid var(--duo-gray-100);
+}
+
+.card-duo:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--duo-gray-200);
+}
+
+/* Interactive card (clickable) */
+.card-interactive {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--duo-green), var(--duo-blue), var(--duo-purple));
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+}
+
+.card-interactive:hover::before {
+  transform: scaleX(1);
+}
+
+/* Card with colored accent */
+.card-green {
+  border-left: 6px solid var(--duo-green);
+}
+
+.card-blue {
+  border-left: 6px solid var(--duo-blue);
+}
+
+.card-purple {
+  border-left: 6px solid var(--duo-purple);
+}
+
+.card-orange {
+  border-left: 6px solid var(--duo-orange);
+}
+
+.card-yellow {
+  border-left: 6px solid var(--duo-yellow);
+}
+
+/* Card with gradient background */
+.card-gradient-green {
+  background: linear-gradient(135deg, var(--duo-green-light) 0%, var(--duo-green) 100%);
+  color: var(--duo-white);
+  border: none;
+}
+
+.card-gradient-blue {
+  background: linear-gradient(135deg, var(--duo-blue-light) 0%, var(--duo-blue) 100%);
+  color: var(--duo-white);
+  border: none;
+}
+
+.card-gradient-purple {
+  background: linear-gradient(135deg, var(--duo-purple-light) 0%, var(--duo-purple) 100%);
+  color: var(--duo-white);
+  border: none;
+}
+
+/* Elevated card */
+.card-elevated {
+  box-shadow: var(--shadow-2xl);
+}
+
+/* Flat card */
+.card-flat {
+  box-shadow: none;
+  border: 1px solid var(--duo-gray-100);
+}
+
+/* ============================================
+   BADGE AND PILL COMPONENTS
+   ============================================ */
+
+/* Base badge */
+.badge-duo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-none);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Badge variants */
+.badge-success {
+  background: var(--duo-green);
+  color: var(--duo-white);
+}
+
+.badge-info {
+  background: var(--duo-blue);
+  color: var(--duo-white);
+}
+
+.badge-warning {
+  background: var(--duo-yellow);
+  color: var(--duo-gray-900);
+}
+
+.badge-danger {
+  background: var(--duo-red);
+  color: var(--duo-white);
+}
+
+.badge-purple {
+  background: var(--duo-purple);
+  color: var(--duo-white);
+}
+
+.badge-gray {
+  background: var(--duo-gray-200);
+  color: var(--duo-gray-800);
+}
+
+/* Outline badges */
+.badge-outline-success {
+  background: transparent;
+  color: var(--duo-green);
+  border: 2px solid var(--duo-green);
+}
+
+.badge-outline-info {
+  background: transparent;
+  color: var(--duo-blue);
+  border: 2px solid var(--duo-blue);
+}
+
+/* Pill (larger badge) */
+.pill-duo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.pill-duo:hover {
+  transform: scale(1.05);
+}
+
+/* Pill variants */
+.pill-green {
+  background: rgba(88, 204, 2, 0.15);
+  color: var(--duo-green-dark);
+}
+
+.pill-blue {
+  background: rgba(28, 176, 246, 0.15);
+  color: var(--duo-blue-dark);
+}
+
+.pill-purple {
+  background: rgba(206, 130, 255, 0.15);
+  color: var(--duo-purple-dark);
+}
+
+.pill-yellow {
+  background: rgba(255, 200, 0, 0.15);
+  color: var(--duo-yellow-dark);
+}
+
+/* Active pill */
+.pill-active {
+  background: var(--duo-green);
+  color: var(--duo-white);
+  box-shadow: var(--shadow-green);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Text colors */
+.text-green { color: var(--duo-green); }
+.text-blue { color: var(--duo-blue); }
+.text-red { color: var(--duo-red); }
+.text-yellow { color: var(--duo-yellow); }
+.text-purple { color: var(--duo-purple); }
+.text-orange { color: var(--duo-orange); }
+.text-gray { color: var(--duo-gray-500); }
+.text-dark { color: var(--duo-gray-900); }
+
+/* Background colors */
+.bg-green { background-color: var(--duo-green); }
+.bg-blue { background-color: var(--duo-blue); }
+.bg-red { background-color: var(--duo-red); }
+.bg-yellow { background-color: var(--duo-yellow); }
+.bg-purple { background-color: var(--duo-purple); }
+.bg-orange { background-color: var(--duo-orange); }
+.bg-gray-50 { background-color: var(--duo-gray-50); }
+.bg-gray-100 { background-color: var(--duo-gray-100); }
+.bg-white { background-color: var(--duo-white); }
+
+/* Border colors */
+.border-green { border-color: var(--duo-green); }
+.border-blue { border-color: var(--duo-blue); }
+.border-red { border-color: var(--duo-red); }
+.border-yellow { border-color: var(--duo-yellow); }
+.border-gray { border-color: var(--duo-gray-200); }
+
+/* Shadows */
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-none { box-shadow: none; }
+
+/* Border radius */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Transitions */
+.transition-fast { transition: all var(--transition-fast); }
+.transition-base { transition: all var(--transition-base); }
+.transition-slow { transition: all var(--transition-slow); }
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 768px) {
+  :root {
+    --text-xs: 0.7rem;
+    --text-sm: 0.8rem;
+    --text-base: 0.9rem;
+    --text-lg: 1rem;
+    --text-xl: 1.125rem;
+    --text-2xl: 1.25rem;
+    --text-3xl: 1.5rem;
+    --text-4xl: 1.875rem;
+    --text-5xl: 2.25rem;
+  }
+
+  .btn-duo {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .card-duo {
+    padding: var(--space-4);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Focus styles */
+.btn-duo:focus-visible,
+.card-interactive:focus-visible,
+.pill-duo:focus-visible {
+  outline: 3px solid var(--duo-blue);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

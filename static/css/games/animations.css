@@ -1,0 +1,1410 @@
+/* ============================================
+   GAMIFICATION SYSTEM - ANIMATIONS
+   Celebration, transition, and feedback animations
+   ============================================ */
+
+/* ============================================
+   ACHIEVEMENT CELEBRATION ANIMATIONS
+   ============================================ */
+
+/* Achievement Unlock Modal */
+.achievement-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: modalFadeIn 0.3s ease;
+}
+
+.achievement-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: achievementPopIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    overflow: hidden;
+}
+
+.achievement-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.achievement-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: iconBounce 1s ease infinite;
+}
+
+.achievement-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.achievement-description {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}
+
+.achievement-close-btn {
+    padding: 12px 30px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.achievement-close-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Confetti Effect */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #f0f;
+    position: absolute;
+    animation: confettiFall 3s linear forwards;
+}
+
+.confetti:nth-child(1) { background: #ff6b6b; left: 10%; animation-delay: 0s; }
+.confetti:nth-child(2) { background: #4ecdc4; left: 20%; animation-delay: 0.1s; }
+.confetti:nth-child(3) { background: #ffe66d; left: 30%; animation-delay: 0.2s; }
+.confetti:nth-child(4) { background: #a8e6cf; left: 40%; animation-delay: 0.3s; }
+.confetti:nth-child(5) { background: #ff8b94; left: 50%; animation-delay: 0.4s; }
+.confetti:nth-child(6) { background: #c7ceea; left: 60%; animation-delay: 0.5s; }
+.confetti:nth-child(7) { background: #ffd3b6; left: 70%; animation-delay: 0.6s; }
+.confetti:nth-child(8) { background: #ffaaa5; left: 80%; animation-delay: 0.7s; }
+.confetti:nth-child(9) { background: #ff8b94; left: 90%; animation-delay: 0.8s; }
+.confetti:nth-child(10) { background: #a8e6cf; left: 95%; animation-delay: 0.9s; }
+
+/* Badge Unlock Animation */
+.badge-unlock {
+    animation: badgeUnlock 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Level Up Notification */
+.level-up-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    padding: 30px 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    animation: levelUpPop 1s ease;
+    text-align: center;
+}
+
+.level-up-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #d35400;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.level-up-number {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #e67e22;
+    animation: numberScale 0.5s ease infinite alternate;
+}
+
+/* ============================================
+   POINTS AND SCORE ANIMATIONS
+   ============================================ */
+
+/* Points Gained Popup */
+.points-popup {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #27ae60;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: pointsFloat 1.5s ease forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.points-popup.bonus {
+    color: #f39c12;
+    font-size: 2.5rem;
+}
+
+.points-popup.mega {
+    color: #e74c3c;
+    font-size: 3rem;
+}
+
+/* Score Counter Animation */
+.score-counting {
+    animation: scorePopIn 0.3s ease;
+}
+
+/* Combo Multiplier */
+.combo-multiplier {
+    display: inline-block;
+    padding: 8px 15px;
+    background: linear-gradient(45deg, #f093fb, #f5576c);
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    animation: comboGlow 1s ease infinite;
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.5);
+}
+
+/* ============================================
+   FEEDBACK ANIMATIONS (CORRECT/INCORRECT)
+   ============================================ */
+
+/* Correct Detection */
+.feedback-correct {
+    animation: feedbackCorrect 0.6s ease;
+}
+
+.correct-checkmark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6rem;
+    color: #27ae60;
+    animation: checkmarkPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Incorrect Detection */
+.feedback-incorrect {
+    animation: feedbackIncorrect 0.6s ease;
+}
+
+.incorrect-cross {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6rem;
+    color: #e74c3c;
+    animation: crossShake 0.6s ease;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Success Glow Effect */
+.success-glow {
+    box-shadow: 0 0 20px rgba(39, 174, 96, 0.6), 0 0 40px rgba(39, 174, 96, 0.4);
+    animation: successPulse 1s ease;
+}
+
+/* Error Shake Effect */
+.error-shake {
+    animation: errorShake 0.5s ease;
+}
+
+/* ============================================
+   TRANSITION ANIMATIONS
+   ============================================ */
+
+/* Screen Fade Transitions */
+.screen-fade-in {
+    animation: screenFadeIn 0.5s ease;
+}
+
+.screen-fade-out {
+    animation: screenFadeOut 0.5s ease;
+}
+
+/* Slide Transitions */
+.slide-in-left {
+    animation: slideInLeft 0.5s ease;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease;
+}
+
+.slide-out-left {
+    animation: slideOutLeft 0.5s ease;
+}
+
+.slide-out-right {
+    animation: slideOutRight 0.5s ease;
+}
+
+/* Scale Transitions */
+.scale-in {
+    animation: scaleIn 0.3s ease;
+}
+
+.scale-out {
+    animation: scaleOut 0.3s ease;
+}
+
+/* ============================================
+   GAME-SPECIFIC ANIMATIONS
+   ============================================ */
+
+/* Card Flip Animation (Memory Game) */
+.card-flip {
+    animation: cardFlip 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.card-match {
+    animation: cardMatch 0.8s ease;
+}
+
+/* Letter Complete Animation (Spell Word) */
+.letter-complete {
+    animation: letterComplete 0.5s ease;
+}
+
+/* Timer Warning Pulse */
+.timer-warning {
+    animation: timerPulse 1s ease infinite;
+}
+
+.timer-danger {
+    animation: timerDanger 0.5s ease infinite;
+}
+
+/* Progress Bar Fill */
+.progress-fill-animate {
+    animation: progressFill 0.5s ease;
+}
+
+/* ============================================
+   LOADING AND WAITING ANIMATIONS
+   ============================================ */
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Waiting Dots */
+.waiting-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+/* Pulse Animation */
+.pulse {
+    animation: pulse 2s ease infinite;
+}
+
+/* ============================================
+   KEYFRAME DEFINITIONS
+   ============================================ */
+
+/* Modal and Popup Animations */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes achievementPopIn {
+    0% {
+        transform: scale(0.5) rotate(-10deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+@keyframes iconBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes confettiFall {
+    0% {
+        top: -10%;
+        transform: translateX(0) rotateZ(0deg);
+        opacity: 1;
+    }
+    100% {
+        top: 110%;
+        transform: translateX(100px) rotateZ(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes badgeUnlock {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes levelUpPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes numberScale {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.1);
+    }
+}
+
+/* Points Animations */
+@keyframes pointsFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes scorePopIn {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes comboGlow {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.5);
+    }
+    50% {
+        box-shadow: 0 4px 30px rgba(240, 147, 251, 0.8), 0 0 40px rgba(245, 87, 108, 0.6);
+    }
+}
+
+/* Feedback Animations */
+@keyframes feedbackCorrect {
+    0% {
+        background: white;
+    }
+    50% {
+        background: rgba(39, 174, 96, 0.3);
+        transform: scale(1.05);
+    }
+    100% {
+        background: white;
+        transform: scale(1);
+    }
+}
+
+@keyframes checkmarkPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3) rotate(10deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes feedbackIncorrect {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+        background: rgba(231, 76, 60, 0.2);
+    }
+    75% {
+        transform: translateX(10px);
+        background: rgba(231, 76, 60, 0.2);
+    }
+}
+
+@keyframes crossShake {
+    0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    25% {
+        transform: translate(-50%, -50%) rotate(-10deg);
+    }
+    75% {
+        transform: translate(-50%, -50%) rotate(10deg);
+    }
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(39, 174, 96, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(39, 174, 96, 0.8), 0 0 60px rgba(39, 174, 96, 0.4);
+    }
+}
+
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+/* Screen Transitions */
+@keyframes screenFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes screenFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleOut {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Game-Specific Animations */
+@keyframes cardFlip {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(180deg);
+    }
+}
+
+@keyframes cardMatch {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    75% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+}
+
+@keyframes letterComplete {
+    0% {
+        transform: scale(1);
+        background: white;
+    }
+    50% {
+        transform: scale(1.2);
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+    }
+    100% {
+        transform: scale(1);
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+    }
+}
+
+@keyframes letterPulse {
+    0%, 100% {
+        border-color: #3498db;
+        box-shadow: 0 0 0 rgba(52, 152, 219, 0.4);
+    }
+    50% {
+        border-color: #2980b9;
+        box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
+    }
+}
+
+@keyframes timerPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+@keyframes timerDanger {
+    0%, 100% {
+        transform: scale(1);
+        color: #e74c3c;
+    }
+    50% {
+        transform: scale(1.1);
+        color: #c0392b;
+    }
+}
+
+@keyframes progressFill {
+    from {
+        width: 0%;
+    }
+}
+
+/* Loading Animations */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60%, 100% {
+        content: '...';
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+/* ============================================
+   PARTICLE EFFECTS
+   ============================================ */
+
+/* Star Burst Effect */
+.star-burst {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: starBurst 1s ease-out forwards;
+}
+
+@keyframes starBurst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Sparkle Effect */
+.sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border: 2px solid rgba(52, 152, 219, 0.6);
+    border-radius: 50%;
+    animation: ripple 1s ease-out forwards;
+}
+
+@keyframes ripple {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    100% {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+    }
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .achievement-content {
+        padding: 30px 20px;
+        max-width: 90%;
+    }
+
+    .achievement-icon {
+        font-size: 4rem;
+    }
+
+    .achievement-title {
+        font-size: 1.5rem;
+    }
+
+    .level-up-text {
+        font-size: 2rem;
+    }
+
+    .level-up-number {
+        font-size: 3rem;
+    }
+
+    .points-popup {
+        font-size: 1.5rem;
+    }
+
+    .correct-checkmark,
+    .incorrect-cross {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievement-icon {
+        font-size: 3rem;
+    }
+
+    .achievement-title {
+        font-size: 1.2rem;
+    }
+
+    .achievement-description {
+        font-size: 0.9rem;
+    }
+
+    .level-up-text {
+        font-size: 1.5rem;
+    }
+
+    .level-up-number {
+        font-size: 2.5rem;
+    }
+
+    .points-popup {
+        font-size: 1.2rem;
+    }
+
+    .correct-checkmark,
+    .incorrect-cross {
+        font-size: 3rem;
+    }
+}
+
+/* ============================================
+   DUOLINGO-STYLE ANIMATIONS (NEW)
+   ============================================ */
+
+/* Shake animation for errors */
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-8px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(8px);
+    }
+}
+
+/* Pulse ring for active elements */
+.pulse-ring {
+    position: relative;
+}
+
+.pulse-ring::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    border: 3px solid currentColor;
+    opacity: 0;
+    animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulseRing {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Bounce in animation for achievements/logros */
+.bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    70% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Slide up animation for modals */
+.slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Slide down animation for modals closing */
+.slide-down {
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 1, 1);
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Fade in animation for smooth transitions */
+.fade-in {
+    animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Fade out animation */
+.fade-out {
+    animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Confetti burst animation for celebrations */
+.confetti-burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    animation: confettiBurst 2s ease-out forwards;
+}
+
+@keyframes confettiBurst {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx, 0), var(--ty, 100px)) rotate(var(--rotate, 360deg));
+        opacity: 0;
+    }
+}
+
+/* Wiggle animation for attention */
+.wiggle {
+    animation: wiggle 0.8s ease-in-out;
+}
+
+@keyframes wiggle {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-5deg);
+    }
+    75% {
+        transform: rotate(5deg);
+    }
+}
+
+/* Pop animation for buttons and interactive elements */
+.pop {
+    animation: pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Glow pulse for important elements */
+.glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+    }
+    50% {
+        box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+    }
+}
+
+/* Tada animation for celebrations */
+.tada {
+    animation: tada 1s ease;
+}
+
+@keyframes tada {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    10%, 20% {
+        transform: scale(0.9) rotate(-3deg);
+    }
+    30%, 50%, 70%, 90% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    40%, 60%, 80% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Jello animation for playful feedback */
+.jello {
+    animation: jello 0.9s ease;
+}
+
+@keyframes jello {
+    0%, 11.1%, 100% {
+        transform: none;
+    }
+    22.2% {
+        transform: skewX(-12.5deg) skewY(-12.5deg);
+    }
+    33.3% {
+        transform: skewX(6.25deg) skewY(6.25deg);
+    }
+    44.4% {
+        transform: skewX(-3.125deg) skewY(-3.125deg);
+    }
+    55.5% {
+        transform: skewX(1.5625deg) skewY(1.5625deg);
+    }
+    66.6% {
+        transform: skewX(-0.78125deg) skewY(-0.78125deg);
+    }
+    77.7% {
+        transform: skewX(0.390625deg) skewY(0.390625deg);
+    }
+    88.8% {
+        transform: skewX(-0.1953125deg) skewY(-0.1953125deg);
+    }
+}
+
+/* Heartbeat animation for streak indicators */
+.heartbeat {
+    animation: heartbeat 1.3s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.15);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.15);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+/* Rubber band animation for elastic feedback */
+.rubber-band {
+    animation: rubberBand 0.8s ease;
+}
+
+@keyframes rubberBand {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scaleX(1.25) scaleY(0.75);
+    }
+    40% {
+        transform: scaleX(0.75) scaleY(1.25);
+    }
+    50% {
+        transform: scaleX(1.15) scaleY(0.85);
+    }
+    65% {
+        transform: scaleX(0.95) scaleY(1.05);
+    }
+    75% {
+        transform: scaleX(1.05) scaleY(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Flash animation for quick attention */
+.flash {
+    animation: flash 0.75s ease;
+}
+
+@keyframes flash {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}
+
+/* Swing animation for hanging elements */
+.swing {
+    transform-origin: top center;
+    animation: swing 1s ease-in-out;
+}
+
+@keyframes swing {
+    20% {
+        transform: rotate(15deg);
+    }
+    40% {
+        transform: rotate(-10deg);
+    }
+    60% {
+        transform: rotate(5deg);
+    }
+    80% {
+        transform: rotate(-5deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Zoom in animation */
+.zoom-in {
+    animation: zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Zoom out animation */
+.zoom-out {
+    animation: zoomOut 0.3s ease-out;
+}
+
+@keyframes zoomOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Flip animation for cards */
+.flip-horizontal {
+    animation: flipHorizontal 0.6s ease;
+}
+
+@keyframes flipHorizontal {
+    0% {
+        transform: perspective(400px) rotateY(0);
+    }
+    100% {
+        transform: perspective(400px) rotateY(360deg);
+    }
+}
+
+/* Roll in animation */
+.roll-in {
+    animation: rollIn 0.6s ease;
+}
+
+@keyframes rollIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) rotate(-120deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+    }
+}
+
+/* Light speed animation for fast transitions */
+.light-speed-in {
+    animation: lightSpeedIn 0.5s ease-out;
+}
+
+@keyframes lightSpeedIn {
+    0% {
+        transform: translateX(100%) skewX(-30deg);
+        opacity: 0;
+    }
+    60% {
+        transform: translateX(-20%) skewX(20deg);
+        opacity: 1;
+    }
+    80% {
+        transform: translateX(0%) skewX(-5deg);
+    }
+    100% {
+        transform: translateX(0%) skewX(0deg);
+    }
+}
+
+/* Rotate in animation */
+.rotate-in {
+    animation: rotateIn 0.6s ease;
+}
+
+@keyframes rotateIn {
+    0% {
+        transform: rotate(-200deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   STAT INCREASE ANIMATIONS
+   ============================================ */
+
+/* Stat increase animation for header stats */
+.stat-increase {
+    animation: statIncrease 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes statIncrease {
+    0% {
+        transform: scale(1);
+        color: inherit;
+    }
+    50% {
+        transform: scale(1.3);
+        color: #58CC02;
+    }
+    100% {
+        transform: scale(1);
+        color: inherit;
+    }
+}
+
+/* Points counter animation */
+.points-counter-animate {
+    animation: pointsCounterPulse 0.3s ease;
+}
+
+@keyframes pointsCounterPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* Level badge glow */
+.level-badge-glow {
+    animation: levelBadgeGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes levelBadgeGlow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 200, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 200, 0, 0.8), 0 0 30px rgba(255, 200, 0, 0.4);
+    }
+}
+
+/* Streak flame animation */
+.streak-flame {
+    animation: streakFlame 1s ease-in-out infinite;
+}
+
+@keyframes streakFlame {
+    0%, 100% {
+        transform: scale(1) translateY(0);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.1) translateY(-2px);
+        filter: brightness(1.2);
+    }
+}
+
+/* Number count up effect */
+.number-count-up {
+    animation: numberCountUp 0.5s ease-out;
+}
+
+@keyframes numberCountUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica del Abecedario ASL</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/animations.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background: linear-gradient(135deg, #E5E5E5 0%, #F7F7F7 100%);
+            color: var(--duo-gray-900);
+            min-height: 100vh;
+        }
+
+        /* Header estilo Duolingo */
+        .header-duo {
+            background: var(--duo-white);
+            border-bottom: 2px solid var(--duo-gray-100);
+            padding: var(--space-4) 0;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-6);
+        }
+
+        .header-logo {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-green);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: var(--space-4);
+            flex: 1;
+        }
+
+        .nav-link {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: var(--duo-gray-700);
+            font-weight: var(--font-semibold);
+            transition: all var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            background: var(--duo-gray-50);
+            color: var(--duo-blue);
+        }
+
+        .nav-link.active {
+            background: var(--duo-blue);
+            color: var(--duo-white);
+        }
+
+        /* Barra de progreso superior */
+        .progress-header {
+            background: var(--duo-white);
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 2px solid var(--duo-gray-100);
+        }
+
+        .progress-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+
+        .progress-label {
+            font-size: var(--text-sm);
+            font-weight: var(--font-bold);
+            color: var(--duo-gray-700);
+        }
+
+        .progress-bar-duo {
+            width: 100%;
+            height: 16px;
+            background: var(--duo-gray-100);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill-duo {
+            height: 100%;
+            background: linear-gradient(90deg, var(--duo-green), var(--duo-green-light));
+            transition: width var(--transition-slow);
+            border-radius: var(--radius-full);
+            position: relative;
+        }
+
+        .progress-fill-duo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        /* Letra actual */
+        .current-letter-section {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .letter-display {
+            font-size: 8rem;
+            font-weight: var(--font-extrabold);
+            color: var(--duo-blue);
+            margin-bottom: var(--space-2);
+            text-shadow: 0 4px 8px rgba(28, 176, 246, 0.3);
+        }
+
+        .letter-instruction {
+            font-size: var(--text-2xl);
+            color: var(--duo-gray-700);
+            font-weight: var(--font-semibold);
+        }
+
+        /* Área de práctica */
+        .practice-area {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        .camera-section {
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--duo-gray-100);
+            transition: all var(--transition-base);
+        }
+
+        .camera-section.detecting {
+            border-color: var(--duo-blue);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .camera-section.correct {
+            border-color: var(--duo-green);
+            box-shadow: var(--shadow-green);
+        }
+
+        .camera-section.incorrect {
+            border-color: var(--duo-red);
+            box-shadow: var(--shadow-red);
+        }
+
+        .video-wrapper {
+            position: relative;
+            margin-bottom: var(--space-4);
+        }
+
+        #videoElement {
+            width: 100%;
+            height: 450px;
+            border-radius: var(--radius-xl);
+            background: var(--duo-gray-100);
+            object-fit: cover;
+        }
+
+        /* Indicador de letra con imagen de referencia */
+        .letter-reference {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: rgba(255, 255, 255, 0.95);
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .reference-letter {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-blue);
+            margin-bottom: var(--space-1);
+        }
+
+        .reference-label {
+            font-size: var(--text-xs);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-semibold);
+        }
+
+        /* Feedback visual */
+        .feedback-overlay {
+            position: absolute;
+            bottom: var(--space-4);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-full);
+            font-weight: var(--font-bold);
+            font-size: var(--text-lg);
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-base);
+        }
+
+        .feedback-overlay.idle { color: var(--duo-gray-600); }
+        .feedback-overlay.detecting { color: var(--duo-blue); }
+        .feedback-overlay.correct { color: var(--duo-green); }
+        .feedback-overlay.incorrect { color: var(--duo-red); }
+
+        /* Barra de confianza */
+        .confidence-bar-container {
+            margin-bottom: var(--space-4);
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--duo-gray-100);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            transition: all var(--transition-base);
+            border-radius: var(--radius-full);
+        }
+
+        .confidence-fill.low { background: var(--duo-red); }
+        .confidence-fill.medium { background: var(--duo-yellow); }
+        .confidence-fill.high { background: var(--duo-green); }
+
+        .confidence-label {
+            font-size: var(--text-sm);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-semibold);
+            margin-top: var(--space-2);
+            text-align: center;
+        }
+
+        /* Panel de resultados */
+        .results-panel {
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--duo-gray-100);
+        }
+
+        .detection-result {
+            text-align: center;
+            padding: var(--space-6);
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .detected-letter {
+            font-size: 5rem;
+            font-weight: var(--font-extrabold);
+            margin-bottom: var(--space-2);
+            color: var(--duo-gray-400);
+            transition: all var(--transition-base);
+        }
+
+        .detected-letter.correct { color: var(--duo-green); }
+        .detected-letter.incorrect { color: var(--duo-red); }
+
+        .detection-status {
+            font-size: var(--text-base);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-semibold);
+        }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            margin-bottom: var(--space-4);
+        }
+
+        /* Botón siguiente letra */
+        .next-letter-btn {
+            width: 100%;
+            padding: var(--space-4);
+            font-size: var(--text-lg);
+        }
+
+        /* Progreso del alfabeto */
+        .alphabet-progress {
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--duo-gray-100);
+        }
+
+        .alphabet-progress h3 {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--duo-gray-900);
+            margin-bottom: var(--space-4);
+        }
+
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+        }
+
+        .letter-box {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-lg);
+            font-weight: var(--font-extrabold);
+            font-size: var(--text-xl);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            background: var(--duo-gray-100);
+            color: var(--duo-gray-400);
+            border: 2px solid transparent;
+        }
+
+        .letter-box.pending {
+            background: var(--duo-gray-100);
+            color: var(--duo-gray-400);
+        }
+
+        .letter-box.current {
+            background: var(--duo-blue);
+            color: var(--duo-white);
+            border-color: var(--duo-blue-dark);
+            animation: pulse 2s infinite;
+            transform: scale(1.1);
+        }
+
+        .letter-box.completed {
+            background: var(--duo-green);
+            color: var(--duo-white);
+            box-shadow: var(--shadow-green);
+        }
+
+        .letter-box:hover:not(.completed):not(.current) {
+            transform: scale(1.05);
+            background: var(--duo-gray-200);
+        }
+
+        /* Estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .stat-number {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-blue);
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-semibold);
+        }
+
+        @media (max-width: 768px) {
+            .practice-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .header-nav {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header estilo Duolingo -->
+    <header class="header-duo">
+        <div class="header-container">
+            <div class="header-logo">ASL Learning</div>
+            <nav class="header-nav">
+                <a href="/" class="nav-link">Inicio</a>
+                <a href="/practice" class="nav-link active">Práctica</a>
+                <a href="/games" class="nav-link">Juegos</a>
+                <a href="/guide" class="nav-link">Guía</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Barra de progreso superior -->
+    <div class="progress-header">
+        <div class="progress-container">
+            <div class="progress-info">
+                <span class="progress-label">Progreso del Alfabeto</span>
+                <span class="progress-label" id="progressText">0 / 24</span>
+            </div>
+            <div class="progress-bar-duo">
+                <div class="progress-fill-duo" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Letra actual -->
+        <div class="current-letter-section">
+            <div class="letter-display" id="currentLetter">A</div>
+            <div class="letter-instruction">Forma la letra <span id="letterName">A</span> con tu mano</div>
+        </div>
+
+        <!-- Área de práctica -->
+        <div class="practice-area">
+            <div class="camera-section" id="cameraSection">
+                <div class="video-wrapper">
+                    <video id="videoElement" autoplay muted></video>
+                    
+                    <!-- Indicador de letra actual -->
+                    <div class="letter-reference">
+                        <div class="reference-letter" id="referenceLetter">A</div>
+                        <div class="reference-label">Objetivo</div>
+                    </div>
+                    
+                    <!-- Feedback overlay -->
+                    <div class="feedback-overlay idle" id="feedbackOverlay">
+                        Muestra la letra
+                    </div>
+                </div>
+
+                <!-- Barra de confianza -->
+                <div class="confidence-bar-container">
+                    <div class="confidence-bar">
+                        <div class="confidence-fill low" id="confidenceFill" style="width: 0%"></div>
+                    </div>
+                    <div class="confidence-label" id="confidenceLabel">Confianza: 0%</div>
+                </div>
+
+                <!-- Controles -->
+                <div class="controls">
+                    <button class="btn-duo btn-primary" id="startBtn">Iniciar Práctica</button>
+                    <button class="btn-duo btn-warning" id="skipBtn">Saltar Letra</button>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <div class="detection-result">
+                    <div class="detected-letter" id="detectedLetter">-</div>
+                    <div class="detection-status" id="detectionStatus">Esperando...</div>
+                </div>
+
+                <!-- Botón siguiente letra -->
+                <button class="btn-duo btn-primary btn-block next-letter-btn" id="nextBtn" disabled>
+                    Siguiente Letra
+                </button>
+            </div>
+        </div>
+
+        <!-- Progreso del alfabeto -->
+        <div class="alphabet-progress">
+            <h3>Tu Progreso</h3>
+            <div class="alphabet-grid" id="alphabetGrid"></div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-label">Completadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="accuracyRate">0%</div>
+                    <div class="stat-label">Precisión</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="currentStreak">0</div>
+                    <div class="stat-label">Racha</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="/static/js/games/storage-manager.js"></script>
+    <script src="/static/js/games/ui-effects.js"></script>
+    
+    <script>
+        // Variables globales
+        let alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];
+        let currentLetterIndex = 0;
+        let isDetecting = false;
+        let completedLetters = new Set();
+        let correctDetections = 0;
+        let totalAttempts = 0;
+        let currentStreak = 0;
+        let video, canvas, ctx;
+        let storageManager = new StorageManager();
+        let letterCompleted = false;
+
+        // Inicializar aplicación
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAvailableLetters();
+            setupEventListeners();
+        });
+
+        async function loadAvailableLetters() {
+            try {
+                const response = await fetch('/get_gestures');
+                const data = await response.json();
+
+                if (data.success && data.gestures) {
+                    alphabet = data.gestures.map(g => g.name);
+                    console.log('Letras cargadas del modelo:', alphabet);
+                }
+            } catch (error) {
+                console.error('Error cargando letras:', error);
+            }
+
+            initializeAlphabetGrid();
+            updateCurrentLetter();
+            loadProgress();
+        }
+
+        function loadProgress() {
+            const progress = storageManager.loadProgress();
+            if (progress.lettersCompleted && progress.lettersCompleted.length > 0) {
+                progress.lettersCompleted.forEach(letter => {
+                    completedLetters.add(letter);
+                    const letterBox = document.getElementById(`letter-${letter}`);
+                    if (letterBox) {
+                        letterBox.classList.add('completed');
+                    }
+                });
+                updateStats();
+                updateProgressBar();
+            }
+        }
+
+        function initializeAlphabetGrid() {
+            const alphabetGrid = document.getElementById('alphabetGrid');
+            alphabetGrid.innerHTML = '';
+            alphabet.forEach((letter, index) => {
+                const letterBox = document.createElement('div');
+                letterBox.className = 'letter-box pending';
+                letterBox.textContent = letter;
+                letterBox.onclick = () => goToLetter(index);
+                letterBox.id = `letter-${letter}`;
+                alphabetGrid.appendChild(letterBox);
+            });
+        }
+
+        function updateCurrentLetter() {
+            const currentLetter = alphabet[currentLetterIndex];
+            document.getElementById('currentLetter').textContent = currentLetter;
+            document.getElementById('letterName').textContent = currentLetter;
+            document.getElementById('referenceLetter').textContent = currentLetter;
+
+            // Actualizar grid
+            document.querySelectorAll('.letter-box').forEach(box => {
+                box.classList.remove('current');
+            });
+            const currentBox = document.getElementById(`letter-${currentLetter}`);
+            if (currentBox && !currentBox.classList.contains('completed')) {
+                currentBox.classList.add('current');
+            }
+
+            letterCompleted = false;
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function setupEventListeners() {
+            document.getElementById('startBtn').addEventListener('click', toggleDetection);
+            document.getElementById('skipBtn').addEventListener('click', skipLetter);
+            document.getElementById('nextBtn').addEventListener('click', nextLetter);
+        }
+
+        async function toggleDetection() {
+            if (!isDetecting) {
+                await startCamera();
+                startDetection();
+                document.getElementById('startBtn').textContent = 'Pausar';
+                document.getElementById('startBtn').className = 'btn-duo btn-warning';
+            } else {
+                stopDetection();
+                document.getElementById('startBtn').textContent = 'Iniciar Práctica';
+                document.getElementById('startBtn').className = 'btn-duo btn-primary';
+            }
+        }
+
+        async function startCamera() {
+            try {
+                video = document.getElementById('videoElement');
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user'
+                    }
+                });
+                video.srcObject = stream;
+
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        resolve();
+                    };
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                UIEffects.showToast('Cámara iniciada correctamente', 'success');
+
+            } catch (error) {
+                console.error('Error accediendo a la cámara:', error);
+                UIEffects.showToast('Error: No se pudo acceder a la cámara', 'error');
+            }
+        }
+
+        function startDetection() {
+            isDetecting = true;
+            document.getElementById('cameraSection').classList.add('detecting');
+            detectLoop();
+        }
+
+        function stopDetection() {
+            isDetecting = false;
+            document.getElementById('cameraSection').classList.remove('detecting', 'correct', 'incorrect');
+        }
+
+        async function detectLoop() {
+            if (!isDetecting) return;
+
+            try {
+                if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+                    setTimeout(detectLoop, 500);
+                    return;
+                }
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0);
+
+                const imageData = canvas.toDataURL('image/jpeg', 0.8);
+
+                if (!imageData || imageData === 'data:,') {
+                    setTimeout(detectLoop, 500);
+                    return;
+                }
+
+                const response = await fetch('/detect_gesture', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: imageData })
+                });
+
+                if (!response.ok) {
+                    setTimeout(detectLoop, 1000);
+                    return;
+                }
+
+                const result = await response.json();
+                updateDetectionResults(result);
+
+            } catch (error) {
+                console.error('Error en detección:', error);
+            }
+
+            if (isDetecting) {
+                setTimeout(detectLoop, 200);
+            }
+        }
+
+        function updateDetectionResults(result) {
+            if (result.success && result.letter) {
+                const detectedLetter = result.letter;
+                const confidence = Math.round(result.confidence * 100);
+                const currentLetter = alphabet[currentLetterIndex];
+
+                document.getElementById('detectedLetter').textContent = detectedLetter;
+                document.getElementById('detectionStatus').textContent = `Confianza: ${confidence}%`;
+
+                // Actualizar barra de confianza
+                updateConfidenceBar(confidence);
+
+                // Actualizar feedback
+                updateFeedback(detectedLetter, currentLetter, confidence);
+
+                // Verificar si es correcto
+                if (detectedLetter === currentLetter && confidence >= 70 && !letterCompleted) {
+                    handleCorrectDetection();
+                }
+
+            } else {
+                document.getElementById('detectedLetter').textContent = '-';
+                document.getElementById('detectionStatus').textContent = 'Sin detección';
+                updateConfidenceBar(0);
+                updateFeedback(null, null, 0);
+            }
+        }
+
+        function updateConfidenceBar(confidence) {
+            const fill = document.getElementById('confidenceFill');
+            const label = document.getElementById('confidenceLabel');
+            
+            fill.style.width = `${confidence}%`;
+            label.textContent = `Confianza: ${confidence}%`;
+            
+            fill.className = 'confidence-fill';
+            if (confidence > 70) {
+                fill.classList.add('high');
+            } else if (confidence > 50) {
+                fill.classList.add('medium');
+            } else {
+                fill.classList.add('low');
+            }
+        }
+
+        function updateFeedback(detected, target, confidence) {
+            const overlay = document.getElementById('feedbackOverlay');
+            const detectedEl = document.getElementById('detectedLetter');
+            const section = document.getElementById('cameraSection');
+
+            overlay.className = 'feedback-overlay';
+            detectedEl.className = 'detected-letter';
+            section.classList.remove('correct', 'incorrect');
+
+            if (!detected || confidence === 0) {
+                overlay.textContent = 'Muestra la letra';
+                overlay.classList.add('idle');
+            } else if (detected === target && confidence >= 70) {
+                overlay.textContent = 'Perfecto';
+                overlay.classList.add('correct');
+                detectedEl.classList.add('correct');
+                section.classList.add('correct');
+            } else if (detected !== target) {
+                overlay.textContent = 'Letra incorrecta';
+                overlay.classList.add('incorrect');
+                detectedEl.classList.add('incorrect');
+                section.classList.add('incorrect');
+            } else {
+                overlay.textContent = 'Mantén la posición';
+                overlay.classList.add('detecting');
+            }
+        }
+
+        function handleCorrectDetection() {
+            const currentLetter = alphabet[currentLetterIndex];
+            letterCompleted = true;
+
+            if (!completedLetters.has(currentLetter)) {
+                completedLetters.add(currentLetter);
+                correctDetections++;
+                currentStreak++;
+
+                // Marcar como completada
+                const letterBox = document.getElementById(`letter-${currentLetter}`);
+                if (letterBox) {
+                    letterBox.classList.remove('current');
+                    letterBox.classList.add('completed');
+                }
+
+                // Guardar progreso
+                storageManager.addCompletedLetter(currentLetter);
+
+                // Mostrar confetti
+                UIEffects.showConfetti();
+
+                UIEffects.showToast(`¡Excelente! Letra ${currentLetter} completada`, 'success');
+
+                updateStats();
+                updateProgressBar();
+            }
+
+            // Habilitar botón siguiente
+            document.getElementById('nextBtn').disabled = false;
+
+            // Auto-avanzar después de 2 segundos
+            setTimeout(() => {
+                if (currentLetterIndex < alphabet.length - 1) {
+                    nextLetter();
+                } else {
+                    completeAlphabet();
+                }
+            }, 2000);
+        }
+
+        function nextLetter() {
+            if (currentLetterIndex < alphabet.length - 1) {
+                currentLetterIndex++;
+                updateCurrentLetter();
+            } else {
+                completeAlphabet();
+            }
+        }
+
+        function skipLetter() {
+            currentStreak = 0;
+            totalAttempts++;
+            nextLetter();
+            UIEffects.showToast('Letra saltada', 'warning');
+        }
+
+        function goToLetter(index) {
+            currentLetterIndex = index;
+            updateCurrentLetter();
+        }
+
+        function completeAlphabet() {
+            stopDetection();
+            UIEffects.showAchievementConfetti();
+            UIEffects.showToast('¡Felicitaciones! Has completado el abecedario ASL', 'success');
+        }
+
+        function updateStats() {
+            document.getElementById('completedCount').textContent = completedLetters.size;
+            document.getElementById('accuracyRate').textContent = totalAttempts > 0 ?
+                Math.round((correctDetections / totalAttempts) * 100) + '%' : '100%';
+            document.getElementById('currentStreak').textContent = currentStreak;
+        }
+
+        function updateProgressBar() {
+            const progress = (completedLetters.size / alphabet.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${completedLetters.size} / ${alphabet.length}`;
+        }
+    </script>
+</body>
+</html>

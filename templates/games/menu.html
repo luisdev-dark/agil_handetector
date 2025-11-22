@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Juegos - ASL Gamificación</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/games/games-common.css">
+    <link rel="stylesheet" href="/static/css/games/animations.css">
+    <style>
+        body {
+            font-family: var(--font-family-base);
+            background: var(--duo-gray-50);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .menu-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: var(--space-10);
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .menu-header h1 {
+            color: var(--duo-gray-900);
+            font-size: var(--text-5xl);
+            margin-bottom: var(--space-3);
+            font-weight: var(--font-extrabold);
+        }
+
+        .menu-header p {
+            color: var(--duo-gray-600);
+            font-size: var(--text-lg);
+            font-weight: var(--font-medium);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+            padding: var(--space-3) var(--space-5);
+            background: var(--duo-white);
+            color: var(--duo-gray-700);
+            text-decoration: none;
+            border-radius: var(--radius-xl);
+            transition: all var(--transition-base);
+            font-weight: var(--font-bold);
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--duo-gray-100);
+        }
+
+        .back-link:hover {
+            background: var(--duo-gray-50);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--duo-gray-200);
+        }
+
+        /* Progress Overview Section */
+        .progress-overview {
+            background: var(--duo-white);
+            padding: var(--space-8);
+            border-radius: var(--radius-2xl);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--duo-gray-100);
+        }
+
+        .progress-overview h2 {
+            color: var(--duo-gray-900);
+            margin-bottom: var(--space-6);
+            font-size: var(--text-2xl);
+            text-align: center;
+            font-weight: var(--font-extrabold);
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .stat-card {
+            padding: var(--space-5);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            transition: all var(--transition-base);
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card.points {
+            background: linear-gradient(135deg, rgba(88, 204, 2, 0.1), rgba(88, 204, 2, 0.05));
+            border-color: var(--duo-green);
+        }
+
+        .stat-card.level {
+            background: linear-gradient(135deg, rgba(28, 176, 246, 0.1), rgba(28, 176, 246, 0.05));
+            border-color: var(--duo-blue);
+        }
+
+        .stat-card.badges {
+            background: linear-gradient(135deg, rgba(255, 200, 0, 0.1), rgba(255, 200, 0, 0.05));
+            border-color: var(--duo-yellow);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--duo-gray-600);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: var(--font-bold);
+        }
+
+        .stat-value {
+            font-size: var(--text-5xl);
+            font-weight: var(--font-extrabold);
+            line-height: var(--leading-none);
+        }
+
+        .stat-card.points .stat-value {
+            color: var(--duo-green);
+        }
+
+        .stat-card.level .stat-value {
+            color: var(--duo-blue);
+        }
+
+        .stat-card.badges .stat-value {
+            color: var(--duo-yellow-dark);
+        }
+
+        /* Badges Display */
+        .badges-display {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-4);
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-xl);
+            border: 2px solid var(--duo-gray-200);
+            min-width: 100px;
+            transition: all var(--transition-base);
+        }
+
+        .badge-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--duo-gray-300);
+        }
+
+        .badge-item.locked {
+            opacity: 0.3;
+            filter: grayscale(100%) blur(2px);
+        }
+
+        .badge-item.unlocked {
+            background: linear-gradient(135deg, rgba(255, 200, 0, 0.15), rgba(255, 200, 0, 0.05));
+            border-color: var(--duo-yellow);
+        }
+
+        .badge-icon {
+            font-size: var(--text-5xl);
+            margin-bottom: var(--space-2);
+        }
+
+        .badge-name {
+            font-size: var(--text-xs);
+            color: var(--duo-gray-700);
+            text-align: center;
+            font-weight: var(--font-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Games Grid - Skill Tree Style */
+        .games-grid {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+            position: relative;
+        }
+
+        /* Connector lines between cards */
+        .games-grid::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--duo-blue), var(--duo-orange), var(--duo-purple));
+            transform: translateX(-50%);
+            z-index: 0;
+            border-radius: var(--radius-full);
+            opacity: 0.2;
+        }
+
+        .game-card {
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-base);
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            border: 3px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .game-card.spell-word {
+            border-color: var(--duo-blue);
+        }
+
+        .game-card.spell-word:hover {
+            box-shadow: var(--shadow-blue);
+        }
+
+        .game-card.time-attack {
+            border-color: var(--duo-orange);
+        }
+
+        .game-card.time-attack:hover {
+            box-shadow: 0 8px 24px rgba(255, 150, 0, 0.3);
+        }
+
+        .game-card.memory-game {
+            border-color: var(--duo-purple);
+        }
+
+        .game-card.memory-game:hover {
+            box-shadow: var(--shadow-purple);
+        }
+
+        .game-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-5);
+        }
+
+        .game-title {
+            font-size: var(--text-3xl);
+            color: var(--duo-gray-900);
+            margin: 0;
+            font-weight: var(--font-extrabold);
+        }
+
+        .game-badge {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-extrabold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-badge.new {
+            background: var(--duo-green);
+            color: var(--duo-white);
+        }
+
+        .game-badge.completed {
+            background: var(--duo-yellow);
+            color: var(--duo-gray-900);
+        }
+
+        .game-description {
+            color: var(--duo-gray-600);
+            font-size: var(--text-base);
+            line-height: var(--leading-relaxed);
+            margin-bottom: var(--space-6);
+            font-weight: var(--font-medium);
+        }
+
+        .game-stats {
+            display: flex;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+            padding: var(--space-4);
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .game-stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .game-stat-label {
+            font-size: var(--text-xs);
+            color: var(--duo-gray-600);
+            margin-bottom: var(--space-1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: var(--font-bold);
+        }
+
+        .game-stat-value {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-extrabold);
+            line-height: var(--leading-none);
+        }
+
+        .game-card.spell-word .game-stat-value {
+            color: var(--duo-blue);
+        }
+
+        .game-card.time-attack .game-stat-value {
+            color: var(--duo-orange);
+        }
+
+        .game-card.memory-game .game-stat-value {
+            color: var(--duo-purple);
+        }
+
+        .play-button {
+            width: 100%;
+            padding: var(--space-4);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--text-lg);
+            font-weight: var(--font-extrabold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--duo-white);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .play-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .play-button.spell-word {
+            background: var(--duo-blue);
+            border-bottom: 4px solid var(--duo-blue-dark);
+        }
+
+        .play-button.spell-word:hover {
+            background: var(--duo-blue-light);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .play-button.time-attack {
+            background: var(--duo-orange);
+            border-bottom: 4px solid var(--duo-orange-dark);
+        }
+
+        .play-button.time-attack:hover {
+            background: var(--duo-orange-light);
+            box-shadow: 0 4px 12px rgba(255, 150, 0, 0.3);
+        }
+
+        .play-button.memory-game {
+            background: var(--duo-purple);
+            border-bottom: 4px solid var(--duo-purple-dark);
+        }
+
+        .play-button.memory-game:hover {
+            background: var(--duo-purple-light);
+            box-shadow: var(--shadow-purple);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-container {
+                padding: var(--space-4);
+            }
+
+            .menu-header h1 {
+                font-size: var(--text-3xl);
+            }
+
+            .menu-header p {
+                font-size: var(--text-base);
+            }
+
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .games-grid::before {
+                display: none;
+            }
+
+            .game-card {
+                padding: var(--space-6);
+            }
+
+            .game-title {
+                font-size: var(--text-2xl);
+            }
+
+            .game-stats {
+                flex-direction: column;
+                gap: var(--space-3);
+            }
+
+            .stat-value {
+                font-size: var(--text-3xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <a href="/" class="back-link">
+            <span>←</span>
+            <span>Volver a Inicio</span>
+        </a>
+
+        <header class="menu-header">
+            <h1>Menú de Juegos ASL</h1>
+            <p>Practica el alfabeto de señas americano de forma divertida</p>
+        </header>
+
+        <!-- Progress Overview -->
+        <section class="progress-overview">
+            <h2>Tu Progreso</h2>
+            
+            <div class="progress-stats">
+                <div class="stat-card points">
+                    <div class="stat-label">Puntos Totales</div>
+                    <div class="stat-value" id="totalPoints">0</div>
+                </div>
+                
+                <div class="stat-card level">
+                    <div class="stat-label">Nivel Actual</div>
+                    <div class="stat-value" id="currentLevel">1</div>
+                </div>
+                
+                <div class="stat-card badges">
+                    <div class="stat-label">Logros Desbloqueados</div>
+                    <div class="stat-value" id="badgesCount">0</div>
+                </div>
+            </div>
+
+            <div class="badges-display" id="badgesDisplay">
+                <!-- Badges will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Games Grid -->
+        <section class="games-grid">
+            <!-- Game 1: Spell Word -->
+            <div class="game-card spell-word" onclick="window.location.href='/games/spell-word'">
+                <div class="game-card-header">
+                    <h3 class="game-title">Deletrea la Palabra</h3>
+                    <span class="game-badge new">NUEVO</span>
+                </div>
+                <p class="game-description">
+                    Se te mostrará una palabra aleatoria. Deletréala letra por letra usando señas ASL. 
+                    Gana puntos por velocidad y precisión.
+                </p>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <div class="game-stat-label">Mejor Puntuación</div>
+                        <div class="game-stat-value" id="spellWordBest">0</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="game-stat-label">Puntos por Letra</div>
+                        <div class="game-stat-value">20</div>
+                    </div>
+                </div>
+                <button class="play-button spell-word">Jugar Ahora</button>
+            </div>
+
+            <!-- Game 2: Time Attack -->
+            <div class="game-card time-attack" onclick="window.location.href='/games/time-attack'">
+                <div class="game-card-header">
+                    <h3 class="game-title">Contra Reloj</h3>
+                    <span class="game-badge new">NUEVO</span>
+                </div>
+                <p class="game-description">
+                    Tienes 60 segundos para hacer tantas señas correctas como puedas. 
+                    Pon a prueba tu velocidad y conocimiento del alfabeto ASL.
+                </p>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <div class="game-stat-label">Mejor Puntuación</div>
+                        <div class="game-stat-value" id="timeAttackBest">0</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="game-stat-label">Tiempo Límite</div>
+                        <div class="game-stat-value">60s</div>
+                    </div>
+                </div>
+                <button class="play-button time-attack">Jugar Ahora</button>
+            </div>
+
+            <!-- Game 3: Memory Game -->
+            <div class="game-card memory-game" onclick="window.location.href='/games/memory'">
+                <div class="game-card-header">
+                    <h3 class="game-title">Memoria ASL</h3>
+                    <span class="game-badge new">NUEVO</span>
+                </div>
+                <p class="game-description">
+                    Encuentra pares de letras en el tablero. Cuando encuentres un par, 
+                    confirma haciendo la seña correcta. Ejercita tu memoria.
+                </p>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <div class="game-stat-label">Mejor Puntuación</div>
+                        <div class="game-stat-value" id="memoryGameBest">0</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="game-stat-label">Pares a Encontrar</div>
+                        <div class="game-stat-value">6</div>
+                    </div>
+                </div>
+                <button class="play-button memory-game">Jugar Ahora</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Include game system scripts (lazy loaded) -->
+    <script>
+        // Lazy load game system scripts
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load essential scripts first
+        Promise.all([
+            loadScript('/static/js/games/storage-manager.js'),
+            loadScript('/static/js/games/points-system.js'),
+            loadScript('/static/js/games/achievements.js')
+        ]).then(() => {
+            console.log('Essential game scripts loaded');
+        }).catch(error => {
+            console.error('Error loading essential scripts:', error);
+        });
+    </script>
+
+    <script>
+        // Initialize game systems
+        let storageManager, pointsSystem, achievementSystem;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeGameSystems();
+            loadProgressData();
+            displayBadges();
+        });
+
+        /**
+         * Initialize all game systems
+         */
+        function initializeGameSystems() {
+            try {
+                // Initialize StorageManager first
+                if (typeof StorageManager !== 'undefined') {
+                    storageManager = new StorageManager();
+                } else {
+                    console.error('StorageManager class not found');
+                    return;
+                }
+
+                // Initialize PointsSystem
+                if (typeof PointsSystem !== 'undefined') {
+                    pointsSystem = new PointsSystem(storageManager);
+                } else {
+                    console.error('PointsSystem class not found');
+                    return;
+                }
+
+                // Initialize AchievementSystem
+                if (typeof AchievementSystem !== 'undefined') {
+                    achievementSystem = new AchievementSystem(storageManager);
+                } else {
+                    console.error('AchievementSystem class not found');
+                    return;
+                }
+
+                console.log('Game systems initialized successfully');
+            } catch (error) {
+                console.error('Error initializing game systems:', error);
+            }
+        }
+
+        /**
+         * Load and display progress data
+         */
+        function loadProgressData() {
+            try {
+                if (!storageManager) {
+                    console.error('StorageManager not initialized');
+                    return;
+                }
+
+                const progress = storageManager.loadProgress();
+
+                // Display points
+                const totalPointsEl = document.getElementById('totalPoints');
+                if (totalPointsEl) totalPointsEl.textContent = progress.points || 0;
+
+                // Display level
+                const currentLevelEl = document.getElementById('currentLevel');
+                if (currentLevelEl) currentLevelEl.textContent = progress.level || 1;
+
+                // Display badges count
+                const badgesCountEl = document.getElementById('badgesCount');
+                if (badgesCountEl) {
+                    const badgesCount = progress.achievements ? progress.achievements.length : 0;
+                    badgesCountEl.textContent = badgesCount;
+                }
+
+                // Display best scores for each game
+                if (progress.gameScores) {
+                    const spellWordBestEl = document.getElementById('spellWordBest');
+                    if (spellWordBestEl) spellWordBestEl.textContent = progress.gameScores.spellWord || 0;
+
+                    const timeAttackBestEl = document.getElementById('timeAttackBest');
+                    if (timeAttackBestEl) timeAttackBestEl.textContent = progress.gameScores.timeAttack || 0;
+
+                    const memoryGameBestEl = document.getElementById('memoryGameBest');
+                    if (memoryGameBestEl) memoryGameBestEl.textContent = progress.gameScores.memoryGame || 0;
+                }
+
+                console.log('Progress data loaded:', progress);
+            } catch (error) {
+                console.error('Error loading progress data:', error);
+            }
+        }
+
+        /**
+         * Display badges in the badges section
+         */
+        function displayBadges() {
+            try {
+                if (!achievementSystem) {
+                    console.error('AchievementSystem not initialized');
+                    return;
+                }
+
+                const badgesContainer = document.getElementById('badgesDisplay');
+                if (!badgesContainer) {
+                    console.error('Badges container not found');
+                    return;
+                }
+
+                badgesContainer.innerHTML = '';
+
+                // Get all achievements with progress
+                const allAchievements = achievementSystem.getAllAchievementsWithProgress();
+
+                // Display first 6 achievements (or all if less than 6)
+                const achievementsToShow = allAchievements.slice(0, 6);
+
+                achievementsToShow.forEach(achievement => {
+                    const badgeElement = document.createElement('div');
+                    badgeElement.className = 'badge-item';
+
+                    if (!achievement.progress.unlocked) {
+                        badgeElement.classList.add('locked');
+                    } else {
+                        badgeElement.classList.add('unlocked');
+                    }
+
+                    badgeElement.innerHTML = `
+                        <div class="badge-icon">${achievement.icon}</div>
+                        <div class="badge-name">${achievement.name}</div>
+                    `;
+
+                    // Add tooltip with description and progress
+                    badgeElement.title = `${achievement.description}\nProgreso: ${achievement.progress.current}/${achievement.progress.required}`;
+
+                    badgesContainer.appendChild(badgeElement);
+                });
+
+                console.log('Badges displayed:', achievementsToShow.length);
+            } catch (error) {
+                console.error('Error displaying badges:', error);
+            }
+        }
+
+        /**
+         * Navigate to game (alternative to onclick in HTML)
+         */
+        function navigateToGame(gameUrl) {
+            window.location.href = gameUrl;
+        }
+    </script>
+</body>
+</html>

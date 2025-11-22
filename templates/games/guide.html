@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Visual ASL - Alfabeto de Señas</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/games/games-common.css">
+    <link rel="stylesheet" href="/static/css/games/animations.css">
+    <style>
+        body {
+            font-family: var(--font-family-base);
+            background: var(--duo-gray-50);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .guide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+            padding: var(--space-3) var(--space-5);
+            background: var(--duo-white);
+            color: var(--duo-gray-700);
+            text-decoration: none;
+            border-radius: var(--radius-xl);
+            transition: all var(--transition-base);
+            font-weight: var(--font-bold);
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--duo-gray-100);
+        }
+
+        .back-link:hover {
+            background: var(--duo-gray-50);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--duo-gray-200);
+        }
+
+        .guide-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+            padding: var(--space-6);
+        }
+
+        .guide-header h1 {
+            color: var(--duo-gray-900);
+            font-size: var(--text-5xl);
+            margin-bottom: var(--space-3);
+            font-weight: var(--font-extrabold);
+        }
+
+        .guide-header p {
+            color: var(--duo-gray-600);
+            font-size: var(--text-lg);
+            font-weight: var(--font-medium);
+        }
+
+        /* Filter Pills */
+        .filter-pills {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-8);
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            padding: var(--space-3) var(--space-5);
+            background: var(--duo-white);
+            color: var(--duo-gray-700);
+            border: 2px solid var(--duo-gray-200);
+            border-radius: var(--radius-full);
+            font-size: var(--text-base);
+            font-weight: var(--font-bold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-pill:hover {
+            background: var(--duo-gray-50);
+            border-color: var(--duo-gray-300);
+            transform: translateY(-2px);
+        }
+
+        .filter-pill.active {
+            background: var(--duo-blue);
+            color: var(--duo-white);
+            border-color: var(--duo-blue);
+            box-shadow: var(--shadow-blue);
+        }
+
+        /* Gallery View */
+        .gallery-view {
+            display: block;
+        }
+
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: var(--space-5);
+            margin-bottom: var(--space-8);
+        }
+
+        .letter-card {
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-5);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--duo-gray-100);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--duo-blue);
+        }
+
+        .letter-card.completed {
+            border-color: var(--duo-green);
+            background: linear-gradient(135deg, rgba(88, 204, 2, 0.05), rgba(88, 204, 2, 0.02));
+        }
+
+        .letter-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: var(--space-2);
+            right: var(--space-2);
+            width: 28px;
+            height: 28px;
+            background: var(--duo-green);
+            color: var(--duo-white);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-sm);
+            font-weight: var(--font-extrabold);
+        }
+
+        .letter-icon {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-6xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-blue);
+            margin-bottom: var(--space-3);
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-xl);
+            transition: all var(--transition-base);
+        }
+
+        .letter-card:hover .letter-icon {
+            background: linear-gradient(135deg, rgba(28, 176, 246, 0.1), rgba(28, 176, 246, 0.05));
+            transform: scale(1.1);
+        }
+
+        .letter-card.completed .letter-icon {
+            color: var(--duo-green);
+        }
+
+        .letter-label {
+            font-size: var(--text-lg);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-gray-800);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Detail View */
+        .detail-view {
+            display: none;
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--duo-gray-100);
+            animation: slide-up 0.3s ease;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-8);
+            padding-bottom: var(--space-6);
+            border-bottom: 3px solid var(--duo-gray-100);
+        }
+
+        .detail-letter-title {
+            font-size: var(--text-6xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-blue);
+            line-height: var(--leading-none);
+        }
+
+        .detail-close-btn {
+            padding: var(--space-3) var(--space-5);
+            background: var(--duo-red);
+            color: var(--duo-white);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--text-base);
+            font-weight: var(--font-extrabold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 0 var(--duo-red-dark);
+        }
+
+        .detail-close-btn:hover {
+            background: var(--duo-red-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-red);
+        }
+
+        .detail-close-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--duo-red-dark);
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        .detail-image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .detail-image-container {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-5);
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--duo-gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .detail-image-placeholder {
+            font-size: 180px;
+            color: var(--duo-blue);
+            font-weight: var(--font-extrabold);
+            line-height: var(--leading-none);
+        }
+
+        .image-coming-soon {
+            position: absolute;
+            bottom: var(--space-3);
+            right: var(--space-3);
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--duo-white);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: var(--font-bold);
+        }
+
+        .detail-info-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .detail-info-section h2 {
+            color: var(--duo-gray-900);
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-5);
+            font-weight: var(--font-extrabold);
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 var(--space-6) 0;
+        }
+
+        .tips-list li {
+            padding: var(--space-4);
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-3);
+            border-left: 5px solid var(--duo-blue);
+            color: var(--duo-gray-800);
+            line-height: var(--leading-relaxed);
+            font-weight: var(--font-medium);
+            transition: all var(--transition-base);
+        }
+
+        .tips-list li:hover {
+            background: var(--duo-white);
+            border-left-color: var(--duo-green);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tips-list li::before {
+            content: '→';
+            margin-right: var(--space-2);
+            color: var(--duo-blue);
+            font-weight: var(--font-extrabold);
+        }
+
+        .practice-section {
+            text-align: center;
+            padding: var(--space-6);
+            background: linear-gradient(135deg, var(--duo-blue), var(--duo-blue-dark));
+            border-radius: var(--radius-2xl);
+            color: var(--duo-white);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .practice-section h3 {
+            margin-bottom: var(--space-4);
+            font-size: var(--text-2xl);
+            font-weight: var(--font-extrabold);
+        }
+
+        .practice-btn {
+            padding: var(--space-4) var(--space-8);
+            background: var(--duo-white);
+            color: var(--duo-blue);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--text-lg);
+            font-weight: var(--font-extrabold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .practice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .practice-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 3px solid var(--duo-gray-100);
+        }
+
+        .nav-btn {
+            padding: var(--space-4) var(--space-6);
+            background: var(--duo-blue);
+            color: var(--duo-white);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: var(--text-base);
+            font-weight: var(--font-extrabold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            box-shadow: 0 4px 0 var(--duo-blue-dark);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--duo-blue-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .nav-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--duo-blue-dark);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: var(--duo-gray-300);
+            box-shadow: none;
+        }
+
+        .nav-info {
+            text-align: center;
+            color: var(--duo-gray-600);
+            font-size: var(--text-base);
+            font-weight: var(--font-bold);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+
+            .alphabet-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .guide-header h1 {
+                font-size: 2rem;
+            }
+
+            .alphabet-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+
+            .letter-icon {
+                height: 80px;
+                font-size: 3rem;
+            }
+
+            .detail-view {
+                padding: 20px;
+            }
+
+            .detail-letter-title {
+                font-size: 2rem;
+            }
+
+            .detail-image-container {
+                height: 300px;
+            }
+
+            .detail-image-placeholder {
+                font-size: 6rem;
+            }
+
+            .detail-navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .guide-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .guide-header p {
+                font-size: 1rem;
+            }
+
+            .alphabet-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+
+            .letter-icon {
+                height: 60px;
+                font-size: 2rem;
+            }
+
+            .letter-label {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="guide-container">
+        <a href="/games" class="back-link">← Volver a Juegos</a>
+
+        <header class="guide-header">
+            <h1>Guía Visual del Alfabeto ASL</h1>
+            <p>Aprende la posición correcta de cada letra del alfabeto de señas americano</p>
+        </header>
+
+        <!-- Filter Pills -->
+        <div class="filter-pills" id="filterPills">
+            <button class="filter-pill active" data-filter="all">Todas</button>
+            <button class="filter-pill" data-filter="completed">Completadas</button>
+            <button class="filter-pill" data-filter="pending">Pendientes</button>
+        </div>
+
+        <!-- Gallery View -->
+        <section class="gallery-view" id="galleryView">
+            <div class="alphabet-grid" id="alphabetGrid">
+                <!-- Letters will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Detail View -->
+        <section class="detail-view" id="detailView">
+            <div class="detail-header">
+                <h2 class="detail-letter-title" id="detailLetterTitle">A</h2>
+                <button class="detail-close-btn" onclick="closeDetailView()">✕ Cerrar</button>
+            </div>
+
+            <div class="detail-content">
+                <div class="detail-image-section">
+                    <div class="detail-image-container" id="detailImageContainer">
+                        <div class="detail-image-placeholder" id="detailImagePlaceholder">A</div>
+                        <img id="detailImage" style="display: none;" alt="Seña ASL">
+                        <span class="image-coming-soon">Imagen de referencia próximamente</span>
+                    </div>
+                </div>
+
+                <div class="detail-info-section">
+                    <h2>Cómo hacer la seña</h2>
+                    <ul class="tips-list" id="tipsList">
+                        <!-- Tips will be populated by JavaScript -->
+                    </ul>
+
+                    <div class="practice-section">
+                        <h3>¿Listo para practicar?</h3>
+                        <a href="/practice" class="practice-btn">Ir a Modo Práctica</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-navigation">
+                <button class="nav-btn" id="prevBtn" onclick="navigateLetter(-1)">
+                    ← Anterior
+                </button>
+                <div class="nav-info">
+                    <span id="currentLetterIndex">1</span> de <span id="totalLetters">24</span>
+                </div>
+                <button class="nav-btn" id="nextBtn" onclick="navigateLetter(1)">
+                    Siguiente →
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ASL Alphabet data with tips for each letter
+        const aslAlphabet = [
+            { letter: 'A', tips: ['Cierra el puño con el pulgar al costado', 'Mantén los dedos juntos y apretados', 'El pulgar debe estar visible desde el frente'] },
+            { letter: 'B', tips: ['Extiende los cuatro dedos hacia arriba', 'Mantén el pulgar doblado sobre la palma', 'Los dedos deben estar juntos y rectos'] },
+            { letter: 'C', tips: ['Forma una "C" con la mano', 'Curva todos los dedos incluyendo el pulgar', 'Deja espacio entre el pulgar y los dedos'] },
+            { letter: 'D', tips: ['Levanta el dedo índice', 'Une el pulgar con los dedos medio, anular y meñique', 'Forma un círculo con el pulgar y dedos'] },
+            { letter: 'E', tips: ['Dobla todos los dedos sobre el pulgar', 'El pulgar debe estar escondido', 'Forma un puño cerrado'] },
+            { letter: 'F', tips: ['Une el pulgar con el índice formando un círculo', 'Extiende los otros tres dedos hacia arriba', 'Mantén los dedos extendidos separados'] },
+            { letter: 'G', tips: ['Extiende el índice y pulgar horizontalmente', 'Forma una "L" horizontal', 'Los otros dedos deben estar cerrados'] },
+            { letter: 'H', tips: ['Extiende el índice y medio horizontalmente', 'Mantén ambos dedos juntos', 'El pulgar y otros dedos cerrados'] },
+            { letter: 'I', tips: ['Levanta solo el dedo meñique', 'Cierra los otros dedos en puño', 'El pulgar puede estar sobre los dedos cerrados'] },
+            { letter: 'J', tips: ['Haz la seña de "I" y dibuja una "J" en el aire', 'Mueve el meñique hacia abajo y luego hacia la izquierda', 'Es la única letra con movimiento'] },
+            { letter: 'K', tips: ['Levanta el índice y medio en forma de "V"', 'Coloca el pulgar entre ambos dedos', 'Los otros dedos cerrados'] },
+            { letter: 'L', tips: ['Forma una "L" con el índice y pulgar', 'El índice apunta hacia arriba', 'El pulgar apunta hacia el lado'] },
+            { letter: 'M', tips: ['Cierra el puño con el pulgar bajo tres dedos', 'El pulgar debe estar entre el anular y meñique', 'Los tres primeros dedos sobre el pulgar'] },
+            { letter: 'N', tips: ['Similar a "M" pero con dos dedos sobre el pulgar', 'El pulgar entre el medio y anular', 'Índice y medio sobre el pulgar'] },
+            { letter: 'O', tips: ['Une todos los dedos con el pulgar formando un círculo', 'Todos los dedos deben tocarse', 'Forma una "O" perfecta'] },
+            { letter: 'P', tips: ['Similar a "K" pero apuntando hacia abajo', 'Índice y medio extendidos hacia abajo', 'Pulgar entre ambos dedos'] },
+            { letter: 'Q', tips: ['Similar a "G" pero apuntando hacia abajo', 'Índice y pulgar extendidos hacia abajo', 'Forma una "G" invertida'] },
+            { letter: 'R', tips: ['Cruza el índice sobre el medio', 'Ambos dedos extendidos hacia arriba', 'Los otros dedos cerrados'] },
+            { letter: 'S', tips: ['Cierra el puño con el pulgar sobre los dedos', 'El pulgar debe estar visible al frente', 'Puño completamente cerrado'] },
+            { letter: 'T', tips: ['Coloca el pulgar entre el índice y medio', 'Cierra el puño', 'Solo la punta del pulgar visible'] },
+            { letter: 'U', tips: ['Extiende el índice y medio juntos hacia arriba', 'Ambos dedos deben estar pegados', 'Los otros dedos cerrados'] },
+            { letter: 'V', tips: ['Extiende el índice y medio separados en "V"', 'Forma una "V" de victoria', 'Los otros dedos cerrados'] },
+            { letter: 'W', tips: ['Extiende índice, medio y anular separados', 'Tres dedos hacia arriba', 'Pulgar y meñique cerrados'] },
+            { letter: 'X', tips: ['Dobla el índice formando un gancho', 'Solo el índice doblado visible', 'Los otros dedos cerrados'] }
+        ];
+
+        let currentLetterIndex = 0;
+
+        let currentFilter = 'all';
+        let completedLetters = [];
+
+        /**
+         * Initialize the guide
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCompletedLetters();
+            renderAlphabetGrid();
+            setupFilterPills();
+            console.log('ASL Guide initialized with', aslAlphabet.length, 'letters');
+        });
+
+        /**
+         * Load completed letters from storage
+         */
+        function loadCompletedLetters() {
+            try {
+                const progress = JSON.parse(localStorage.getItem('asl_gamification_data') || '{}');
+                completedLetters = progress.lettersCompleted || [];
+                console.log('Loaded completed letters:', completedLetters);
+            } catch (error) {
+                console.error('Error loading completed letters:', error);
+                completedLetters = [];
+            }
+        }
+
+        /**
+         * Setup filter pills
+         */
+        function setupFilterPills() {
+            const pills = document.querySelectorAll('.filter-pill');
+            pills.forEach(pill => {
+                pill.addEventListener('click', function() {
+                    // Remove active class from all pills
+                    pills.forEach(p => p.classList.remove('active'));
+                    // Add active class to clicked pill
+                    this.classList.add('active');
+                    // Update filter and re-render
+                    currentFilter = this.dataset.filter;
+                    renderAlphabetGrid();
+                });
+            });
+        }
+
+        /**
+         * Render the alphabet grid
+         */
+        function renderAlphabetGrid() {
+            const grid = document.getElementById('alphabetGrid');
+            grid.innerHTML = '';
+
+            let filteredLetters = aslAlphabet;
+
+            // Apply filter
+            if (currentFilter === 'completed') {
+                filteredLetters = aslAlphabet.filter(item => completedLetters.includes(item.letter));
+            } else if (currentFilter === 'pending') {
+                filteredLetters = aslAlphabet.filter(item => !completedLetters.includes(item.letter));
+            }
+
+            if (filteredLetters.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--duo-gray-500); font-size: var(--text-lg); padding: var(--space-8);">No hay letras para mostrar con este filtro.</p>';
+                return;
+            }
+
+            filteredLetters.forEach((item, index) => {
+                const actualIndex = aslAlphabet.indexOf(item);
+                const isCompleted = completedLetters.includes(item.letter);
+                
+                const card = document.createElement('div');
+                card.className = 'letter-card';
+                if (isCompleted) {
+                    card.classList.add('completed');
+                }
+                card.onclick = () => showDetailView(actualIndex);
+
+                card.innerHTML = `
+                    <div class="letter-icon">${item.letter}</div>
+                    <div class="letter-label">Letra ${item.letter}</div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            console.log('Alphabet grid rendered with', filteredLetters.length, 'letters (filter:', currentFilter, ')');
+        }
+
+        /**
+         * Show detail view for a specific letter
+         */
+        function showDetailView(index) {
+            currentLetterIndex = index;
+            const letter = aslAlphabet[index];
+
+            // Update detail view content
+            document.getElementById('detailLetterTitle').textContent = `Letra ${letter.letter}`;
+            document.getElementById('detailImagePlaceholder').textContent = letter.letter;
+            
+            // Try to load the actual image
+            loadLetterImage(letter.letter);
+            
+            // Update tips list
+            const tipsList = document.getElementById('tipsList');
+            tipsList.innerHTML = '';
+            letter.tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                tipsList.appendChild(li);
+            });
+
+            // Update navigation info
+            document.getElementById('currentLetterIndex').textContent = index + 1;
+            document.getElementById('totalLetters').textContent = aslAlphabet.length;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === aslAlphabet.length - 1;
+
+            // Hide gallery, show detail
+            document.getElementById('galleryView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'block';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            console.log('Showing detail view for letter:', letter.letter);
+        }
+
+        /**
+         * Load letter image if available
+         */
+        function loadLetterImage(letter) {
+            const imgElement = document.getElementById('detailImage');
+            const placeholder = document.getElementById('detailImagePlaceholder');
+            const comingSoon = document.querySelector('.image-coming-soon');
+            
+            // Try multiple image formats
+            const formats = ['webp', 'png', 'jpg', 'jpeg'];
+            let formatIndex = 0;
+            
+            function tryNextFormat() {
+                if (formatIndex >= formats.length) {
+                    // No image found, show placeholder
+                    placeholder.style.display = 'flex';
+                    imgElement.style.display = 'none';
+                    if (comingSoon) comingSoon.style.display = 'block';
+                    console.log('No image found for letter:', letter);
+                    return;
+                }
+                
+                const format = formats[formatIndex];
+                const imagePath = `/static/images/asl-letters/${letter}.${format}`;
+                
+                imgElement.onload = function() {
+                    // Image loaded successfully
+                    placeholder.style.display = 'none';
+                    imgElement.style.display = 'block';
+                    if (comingSoon) comingSoon.style.display = 'none';
+                    console.log('Loaded image for letter:', letter, 'format:', format);
+                };
+                
+                imgElement.onerror = function() {
+                    // Try next format
+                    formatIndex++;
+                    tryNextFormat();
+                };
+                
+                imgElement.src = imagePath;
+                imgElement.alt = `Seña ASL para la letra ${letter}`;
+            }
+            
+            // Start trying formats
+            tryNextFormat();
+        }
+
+        /**
+         * Close detail view and return to gallery
+         */
+        function closeDetailView() {
+            document.getElementById('galleryView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            console.log('Closed detail view, returning to gallery');
+        }
+
+        /**
+         * Navigate to previous or next letter
+         */
+        function navigateLetter(direction) {
+            const newIndex = currentLetterIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < aslAlphabet.length) {
+                showDetailView(newIndex);
+            }
+        }
+
+        /**
+         * Keyboard navigation
+         */
+        document.addEventListener('keydown', function(event) {
+            const detailView = document.getElementById('detailView');
+            
+            if (detailView.style.display === 'block') {
+                if (event.key === 'ArrowLeft') {
+                    navigateLetter(-1);
+                } else if (event.key === 'ArrowRight') {
+                    navigateLetter(1);
+                } else if (event.key === 'Escape') {
+                    closeDetailView();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

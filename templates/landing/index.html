@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL Learning — Plataforma Educativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/animations.css">
+    <style>
+        body { font-family: var(--font-family-base); background: linear-gradient(135deg, #E5E5E5 0%, #F7F7F7 100%); color: var(--duo-gray-900); }
+        .container { max-width: 1200px; margin: 0 auto; padding: var(--space-8) var(--space-6); }
+        .hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--space-8); align-items: center; }
+        .hero-title { font-size: var(--text-5xl); font-weight: var(--font-extrabold); color: var(--duo-gray-900); }
+        .hero-sub { font-size: var(--text-xl); color: var(--duo-gray-600); margin-top: var(--space-3); }
+        .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-6); }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-top: var(--space-10); }
+        .pricing { margin-top: var(--space-12); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+        .price { font-size: var(--text-3xl); font-weight: var(--font-extrabold); }
+        .price-note { color: var(--duo-gray-500); font-size: var(--text-sm); }
+        .header-duo { background: var(--duo-white); border-bottom: 2px solid var(--duo-gray-100); padding: var(--space-4) 0; position: sticky; top: 0; z-index: var(--z-sticky); box-shadow: var(--shadow-sm); }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6); display: flex; align-items: center; justify-content: space-between; }
+        .header-logo { font-size: var(--text-2xl); font-weight: var(--font-extrabold); color: var(--duo-green); }
+        .nav-actions { display: flex; gap: var(--space-3); }
+        .footer { margin-top: var(--space-12); padding: var(--space-8) 0; color: var(--duo-gray-600); text-align: center; }
+        @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .feature-grid, .pricing-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="header-duo">
+        <div class="header-container">
+            <div class="header-logo">ASL Learning</div>
+            <div class="nav-actions">
+                <a href="/auth/login" class="btn-duo btn-outline">Iniciar sesión</a>
+                <form action="/auth/guest" method="post" style="display:inline">
+                    <button class="btn-duo btn-secondary" type="submit">Modo invitado</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div>
+                <h1 class="hero-title">Aprende el alfabeto ASL con tecnología interactiva</h1>
+                <p class="hero-sub">Detección de señas en tiempo real, mini‑juegos y guía visual, todo en una plataforma moderna para escuelas y familias.</p>
+                <div class="hero-actions">
+                    <a href="/auth/register" class="btn-duo btn-primary btn-lg">Comenzar gratis</a>
+                    <a href="#precios" class="btn-duo btn-outline btn-lg">Ver planes</a>
+                </div>
+            </div>
+            <div class="card-duo card-interactive">
+                <h3 style="font-weight: var(--font-bold); margin-bottom: var(--space-3);">Características principales</h3>
+                <ul style="color: var(--duo-gray-600); line-height: var(--leading-relaxed);">
+                    <li>Reconocimiento de letras ASL en tiempo real</li>
+                    <li>Mini‑juegos: deletrea, contra reloj y memoria</li>
+                    <li>Guía visual y consejos de posicionamiento</li>
+                    <li>Progreso y logros en el navegador</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="feature-grid">
+            <div class="card-duo card-green">
+                <h4 style="font-weight: var(--font-bold);">Detección en Tiempo Real</h4>
+                <p class="text-gray">Usa tu cámara para practicar y ver feedback inmediato.</p>
+            </div>
+            <div class="card-duo card-blue">
+                <h4 style="font-weight: var(--font-bold);">Aprendizaje Gamificado</h4>
+                <p class="text-gray">Juegos y desafíos diarios para motivar la práctica.</p>
+            </div>
+            <div class="card-duo card-purple">
+                <h4 style="font-weight: var(--font-bold);">Diseño Accesible</h4>
+                <p class="text-gray">Interfaz clara, responsive y compatible con navegadores modernos.</p>
+            </div>
+        </section>
+
+        <section id="precios" class="pricing">
+            <h2 style="font-size: var(--text-4xl); font-weight: var(--font-extrabold);">Planes</h2>
+            <div class="pricing-grid">
+                <div class="card-duo card-elevated">
+                    <span class="badge-duo badge-info">Personal</span>
+                    <p class="price">TBD</p>
+                    <p class="price-note">Precio orientativo para LATAM</p>
+                    <ul class="text-gray" style="margin-top: var(--space-3);">
+                        <li>Acceso completo a práctica y juegos</li>
+                        <li>Progreso guardado en el navegador</li>
+                        <li>Soporte por email</li>
+                    </ul>
+                    <a href="/auth/register" class="btn-duo btn-primary btn-block" style="margin-top: var(--space-4);">Elegir Personal</a>
+                </div>
+                <div class="card-duo card-elevated">
+                    <span class="badge-duo badge-purple">Enterprise</span>
+                    <p class="price">TBD</p>
+                    <p class="price-note">Escuelas e instituciones</p>
+                    <ul class="text-gray" style="margin-top: var(--space-3);">
+                        <li>Panel de docentes y métricas</li>
+                        <li>Gestión de aulas y usuarios</li>
+                        <li>Opciones on‑prem y cumplimiento</li>
+                    </ul>
+                    <a href="mailto:contacto@example.com" class="btn-duo btn-secondary btn-block" style="margin-top: var(--space-4);">Contactar Ventas</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-duo" style="margin-top: var(--space-10);">
+            <h3 style="font-weight: var(--font-bold);">Prueba en modo invitado</h3>
+            <p class="text-gray">Accede a la plataforma en fase beta y prueba la funcionalidad principal sin registro.</p>
+            <form action="/auth/guest" method="post" style="margin-top: var(--space-4);">
+                <button class="btn-duo btn-secondary" type="submit">Entrar como invitado</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <small>© ASL Learning — Diseño inspirado en interfaces educativas modernas</small>
+    </footer>
+</body>
+</html>

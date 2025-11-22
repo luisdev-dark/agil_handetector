@@ -1,0 +1,542 @@
+/* Estilos para la interfaz del agente */
+.agent-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.agent-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+}
+
+.agent-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.2em;
+}
+
+.agent-header p {
+    margin: 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.agent-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    min-height: 600px;
+}
+
+/* Panel de comunicación */
+.communication-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.client-section, .agent-section {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.client-section {
+    border-left: 5px solid #28a745;
+}
+
+.agent-section {
+    border-left: 5px solid #007bff;
+}
+
+.client-section h3, .agent-section h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.3em;
+}
+
+.current-gesture {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.gesture-name {
+    display: block;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.gesture-confidence {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.gesture-message {
+    padding: 10px;
+    background: #e7f3ff;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+    font-style: italic;
+}
+
+/* Botones de respuesta rápida */
+.quick-responses {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+@media (min-width: 1200px) {
+    .quick-responses {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.response-btn {
+    padding: 12px 15px;
+    border: 2px solid #dee2e6;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-align: left;
+}
+
+.response-btn:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    transform: translateY(-2px);
+}
+
+.response-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Panel de demostración de gestos */
+.gesture-demo-panel {
+    grid-column: 1 / -1;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.demo-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.demo-header h3 {
+    margin: 0;
+    color: #495057;
+    font-size: 1.4em;
+}
+
+.demo-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Área de demostración visual */
+.demo-visual {
+    text-align: center;
+}
+
+.gesture-animation {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 40px 20px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hand-placeholder {
+    text-align: center;
+}
+
+.hand-placeholder span {
+    font-size: 4em;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.hand-placeholder p {
+    color: #6c757d;
+    font-size: 1.1em;
+    margin: 0;
+}
+
+/* Visualización de landmarks */
+.landmarks-display {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.landmark-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00ff00;
+    transform: translate(-50%, -50%);
+}
+
+.landmark-point.wrist {
+    background: #ff0000;
+    width: 12px;
+    height: 12px;
+}
+
+.landmark-point.fingertip {
+    background: #ffff00;
+    width: 10px;
+    height: 10px;
+}
+
+.landmark-connection {
+    position: absolute;
+    background: #00ff00;
+    height: 2px;
+    transform-origin: left center;
+}
+
+/* Instrucciones */
+.demo-instructions {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.instructions-list {
+    margin-bottom: 20px;
+}
+
+.instructions-list h4 {
+    margin: 0 0 10px 0;
+    color: #495057;
+}
+
+.instructions-list ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.instructions-list li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.gesture-details {
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
+
+.detail-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.detail-item strong {
+    min-width: 100px;
+    color: #495057;
+}
+
+/* Historial de conversación */
+.conversation-history {
+    grid-column: 1 / -1;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.conversation-log {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f8f9fa;
+}
+
+.conversation-item {
+    display: flex;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background: white;
+    border-left: 4px solid #dee2e6;
+}
+
+.conversation-item.client {
+    border-left-color: #28a745;
+}
+
+.conversation-item.agent {
+    border-left-color: #007bff;
+}
+
+.conversation-time {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-right: 10px;
+    min-width: 60px;
+}
+
+.conversation-content {
+    flex: 1;
+}
+
+.conversation-gesture {
+    font-weight: bold;
+    color: #495057;
+}
+
+.conversation-description {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+/* Controles del agente */
+.agent-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.connection-status {
+    display: flex;
+    gap: 15px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-label {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.status-value {
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.status-value.connected {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-value.disconnected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-value.active {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #138496;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.gesture-animation.active {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .agent-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .communication-panel {
+        grid-template-columns: 1fr;
+    }
+    
+    .demo-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .agent-controls {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .quick-responses {
+        grid-template-columns: 1fr;
+    }
+    
+    .agent-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .connection-status {
+        justify-content: center;
+    }
+}/* E
+stilos para botones de estado del proceso */
+.process-status {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #17a2b8;
+}
+
+.process-status h4 {
+    margin: 0 0 10px 0;
+    color: #17a2b8;
+    font-size: 1.1em;
+}
+
+.status-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.status-btn {
+    background: white;
+    border: 2px solid #17a2b8;
+    color: #17a2b8;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.status-btn:hover {
+    background: #17a2b8;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.status-btn.active {
+    background: #17a2b8;
+    color: white;
+}
+
+/* Responsive para botones de estado */
+@media (max-width: 768px) {
+    .status-buttons {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    
+    .status-btn {
+        padding: 6px 8px;
+        font-size: 0.85em;
+    }
+}

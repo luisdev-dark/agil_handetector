@@ -1,0 +1,4 @@
+# This directory contains ASL alphabet reference images
+# See README.md for image requirements and sources
+# See IMAGE_SOURCES.md for where to find images
+# Use generate_placeholders.py to create temporary placeholder images

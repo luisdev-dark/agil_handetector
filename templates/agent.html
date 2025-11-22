@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Soporte ASL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #2980b9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .client-status {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .detected-gesture {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .gesture-info {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .response-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .response-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .response-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .conversation-log {
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+
+        .log-entry.client {
+            background: #e8f5e8;
+            border-left-color: #27ae60;
+        }
+
+        .log-entry.agent {
+            background: #e8f4fd;
+            border-left-color: #3498db;
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="navigation">
+            <a href="/" class="nav-link">Reconocimiento ASL</a>
+            <a href="/practice" class="nav-link">Modo Práctica</a>
+            <a href="/agent" class="nav-link">Panel de Soporte</a>
+        </div>
+
+        <div class="header">
+            <h1>Panel de Soporte ASL</h1>
+            <p>Monitoreo de comunicación con personas sordas</p>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h2>Cliente (Señas Detectadas)</h2>
+                <div class="client-status">
+                    <div class="detected-gesture" id="clientGesture">-</div>
+                    <div class="gesture-info" id="gestureInfo">Esperando señas del cliente...</div>
+                </div>
+
+                <h3>Respuestas Rápidas</h3>
+                <div class="response-grid">
+                    <button class="response-btn" onclick="sendResponse('A')">A - Confirmar</button>
+                    <button class="response-btn" onclick="sendResponse('B')">B - Bien</button>
+                    <button class="response-btn" onclick="sendResponse('C')">C - Correcto</button>
+                    <button class="response-btn" onclick="sendResponse('D')">D - De acuerdo</button>
+                    <button class="response-btn" onclick="sendResponse('E')">E - Entendido</button>
+                    <button class="response-btn" onclick="sendResponse('F')">F - Finalizar</button>
+                    <button class="response-btn" onclick="sendResponse('G')">G - Gracias</button>
+                    <button class="response-btn" onclick="sendResponse('H')">H - Hola</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Historial de Comunicación</h2>
+                <div class="conversation-log" id="conversationLog">
+                    <div class="log-entry">
+                        <strong>Sistema:</strong> Panel de soporte iniciado
+                        <div class="timestamp">Esperando comunicación...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let conversationLog = [];
+
+        // Monitorear gestos del cliente
+        setInterval(async () => {
+            try {
+                const response = await fetch('/get_latest_gesture');
+                const data = await response.json();
+
+                if (data.success && data.gesture) {
+                    updateClientGesture(data.gesture, data.confidence, data.description);
+                }
+            } catch (error) {
+                console.error('Error monitoreando cliente:', error);
+            }
+        }, 2000);
+
+        function updateClientGesture(gesture, confidence, description) {
+            document.getElementById('clientGesture').textContent = gesture;
+            document.getElementById('gestureInfo').textContent =
+                `${description} (${Math.round(confidence * 100)}% confianza)`;
+
+            addToLog('Cliente', `Seña detectada: ${gesture}`, 'client');
+        }
+
+        function sendResponse(letter) {
+            fetch('/send_agent_response', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gesture: letter })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addToLog('Agente', `Respuesta enviada: ${letter}`, 'agent');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function addToLog(sender, message, type) {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.innerHTML = `
+                <strong>${sender}:</strong> ${message}
+                <div class="timestamp">${new Date().toLocaleTimeString()}</div>
+            `;
+
+            const log = document.getElementById('conversationLog');
+            log.appendChild(logEntry);
+            log.scrollTop = log.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>

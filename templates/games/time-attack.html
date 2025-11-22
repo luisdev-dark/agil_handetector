@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contra Reloj - ASL</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/games/games-common.css">
+    <link rel="stylesheet" href="/static/css/games/animations.css">
+    <style>
+        body {
+            font-family: var(--font-family-base);
+            background: var(--duo-gray-50);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Circular Timer */
+        .circular-timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: var(--space-6) auto;
+            position: relative;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: var(--duo-gray-100);
+            stroke-width: 12;
+        }
+
+        .timer-circle-progress {
+            fill: none;
+            stroke: var(--duo-orange);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke var(--transition-base), stroke-dashoffset 1s linear;
+        }
+
+        .timer-circle-progress.warning {
+            stroke: var(--duo-yellow);
+        }
+
+        .timer-circle-progress.danger {
+            stroke: var(--duo-red);
+            animation: pulse-stroke 0.5s infinite;
+        }
+
+        @keyframes pulse-stroke {
+            0%, 100% { stroke-width: 12; }
+            50% { stroke-width: 16; }
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .timer-value {
+            font-size: var(--text-6xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-orange);
+            line-height: var(--leading-none);
+            font-family: var(--font-family-mono);
+        }
+
+        .timer-value.warning {
+            color: var(--duo-yellow-dark);
+        }
+
+        .timer-value.danger {
+            color: var(--duo-red);
+            animation: pulse-scale 0.5s infinite;
+        }
+
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .timer-label {
+            font-size: var(--text-sm);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: var(--space-2);
+        }
+
+        /* Target Letter Display */
+        .target-letter-display {
+            background: var(--duo-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-6);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--duo-orange);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .target-letter-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--duo-orange), var(--duo-orange-light));
+        }
+
+        .target-letter-label {
+            font-size: var(--text-base);
+            color: var(--duo-gray-600);
+            margin-bottom: var(--space-4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: var(--font-bold);
+        }
+
+        .target-letter-value {
+            font-size: 140px;
+            font-weight: var(--font-extrabold);
+            color: var(--duo-orange);
+            line-height: var(--leading-none);
+            text-shadow: 0 4px 8px rgba(255, 150, 0, 0.2);
+            animation: pulse-ring 2s infinite;
+        }
+
+        /* Letters Detected List */
+        .letters-detected-list {
+            background: var(--duo-white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--duo-gray-100);
+        }
+
+        .letters-detected-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .letters-detected-list::-webkit-scrollbar-track {
+            background: var(--duo-gray-50);
+            border-radius: var(--radius-full);
+        }
+
+        .letters-detected-list::-webkit-scrollbar-thumb {
+            background: var(--duo-orange);
+            border-radius: var(--radius-full);
+        }
+
+        .detected-letter-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) var(--space-3);
+            margin-bottom: var(--space-2);
+            background: linear-gradient(135deg, rgba(255, 150, 0, 0.1), rgba(255, 150, 0, 0.05));
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--duo-orange);
+            animation: slide-in-right 0.3s ease;
+        }
+
+        .detected-letter-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detected-letter-char {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-orange);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .detected-letter-info {
+            flex: 1;
+        }
+
+        .detected-letter-time {
+            font-size: var(--text-xs);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-semibold);
+        }
+
+        @keyframes slide-in-right {
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .circular-timer {
+                margin: var(--space-4) auto;
+            }
+
+            .timer-value {
+                font-size: var(--text-5xl);
+            }
+
+            .target-letter-value {
+                font-size: 100px;
+            }
+
+            .letters-detected-list {
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Game Header -->
+        <header class="game-header">
+            <h1>Contra Reloj</h1>
+            <p>Detecta todas las letras que puedas en 60 segundos</p>
+        </header>
+
+        <!-- Feedback Indicator -->
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; pointer-events: none;" id="feedbackIndicator"></div>
+
+        <!-- Speed Display -->
+        <div style="position: fixed; top: 20px; right: 20px; background: white; padding: 10px 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 14px; z-index: 1000;" id="speedDisplay">
+            <div style="font-weight: bold; color: #666;">Velocidad</div>
+            <div style="font-size: 20px; font-weight: bold; color: #ff6b35;" id="speedValue">0</div>
+            <div style="font-size: 12px; color: #666;">letras/min</div>
+        </div>
+
+        <!-- Speed Bar -->
+        <div style="position: fixed; top: 100px; right: 20px; width: 200px; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; z-index: 1000;" id="speedBarContainer">
+            <div style="height: 100%; background: linear-gradient(90deg, #ff6b35, #ff8e53); width: 0%; transition: width 0.3s ease;" id="speedBar"></div>
+        </div>
+
+        <!-- Game Layout -->
+        <div class="game-layout">
+            <!-- Main Game Area -->
+            <div class="game-main">
+                <!-- Circular Timer -->
+                <div class="circular-timer">
+                    <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
+                        <circle class="timer-circle-bg" cx="100" cy="100" r="90"></circle>
+                        <circle class="timer-circle-progress" id="timerCircle" cx="100" cy="100" r="90"
+                                stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="timer-text">
+                        <div class="timer-value" id="timerValue">60</div>
+                        <div class="timer-label">segundos</div>
+                    </div>
+                </div>
+
+                <!-- Target Letter Display -->
+                <div class="target-letter-display">
+                    <div class="target-letter-label">Letra Objetivo</div>
+                    <div class="target-letter-value" id="targetLetter">?</div>
+                </div>
+
+                <!-- Video Container -->
+                <div class="game-video-container">
+                    <video id="videoElement" autoplay muted></video>
+                </div>
+
+                <!-- Game Message -->
+                <div class="game-message info" id="gameMessage">
+                    Presiona "Iniciar Juego" para comenzar
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls">
+                    <button class="btn-duo btn-primary btn-lg" id="startBtn">Iniciar Juego</button>
+                    <button class="btn-duo btn-secondary btn-lg" id="restartBtn" disabled>Reintentar</button>
+                    <button class="btn-duo btn-outline" id="menuBtn" onclick="window.location.href='/games'">Menú</button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="game-sidebar">
+                <!-- Score Display -->
+                <div class="game-status">
+                    <h3>Puntuación</h3>
+                    <div class="score-display">
+                        <div class="score-item">
+                            <span class="score-label">Puntos</span>
+                            <span class="score-value" id="scoreValue">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Letras Correctas</span>
+                            <span class="score-value" id="correctLetters">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Mejor Racha</span>
+                            <span class="score-value" id="bestStreak">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Letters Detected -->
+                <div class="game-status">
+                    <h3>Letras Detectadas</h3>
+                    <div class="letters-detected-list" id="lettersDetectedList">
+                        <p style="text-align: center; color: var(--duo-gray-400); font-size: var(--text-sm);">
+                            Ninguna letra detectada aún
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Level & Points -->
+                <div class="level-display">
+                    <div class="level-label">Nivel</div>
+                    <div class="level-value" id="levelValue">1</div>
+                </div>
+
+                <div class="points-display">
+                    <div class="points-label">Puntos Totales</div>
+                    <div class="points-value" id="totalPoints">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen (Hidden by default) -->
+        <div class="results-screen hidden" id="resultsScreen">
+            <h2>⏱️ ¡Tiempo Terminado!</h2>
+            <div class="results-stats">
+                <div class="result-stat highlight">
+                    <div class="result-stat-label">Puntos Ganados</div>
+                    <div class="result-stat-value" id="resultScore">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-label">Letras Correctas</div>
+                    <div class="result-stat-value" id="resultLetters">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-label">Precisión</div>
+                    <div class="result-stat-value" id="resultAccuracy">100%</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-label">Mejor Racha</div>
+                    <div class="result-stat-value" id="resultStreak">0</div>
+                </div>
+            </div>
+
+            <!-- Badges Earned -->
+            <div class="badge-container" id="badgesEarned">
+                <!-- Badges will be shown here if earned -->
+            </div>
+
+            <div class="game-controls">
+                <button class="game-btn game-btn-start" onclick="location.reload()">Jugar de Nuevo</button>
+                <button class="game-btn game-btn-menu" onclick="window.location.href='/games'">Volver al Menú</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
+    <!-- Include Game Systems (lazy loaded) -->
+    <script>
+        // Lazy load game system scripts
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load essential scripts first
+        Promise.all([
+            loadScript('/static/js/games/storage-manager.js'),
+            loadScript('/static/js/games/points-system.js'),
+            loadScript('/static/js/games/achievements.js'),
+            loadScript('/static/js/games/ui-effects.js'),
+            loadScript('/static/js/games/game-engine.js')
+        ]).then(() => {
+            console.log('Essential game scripts loaded');
+            // Load game-specific script after essentials
+            return loadScript('/static/js/games/time-attack.js');
+        }).then(() => {
+            console.log('Time attack game script loaded');
+        }).catch(error => {
+            console.error('Error loading scripts:', error);
+        });
+    </script>
+</body>
+</html>

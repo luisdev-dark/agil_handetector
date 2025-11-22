@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/animations.css">
+    <style>
+        body { font-family: var(--font-family-base); background: var(--duo-gray-50); }
+        .container { max-width: 480px; margin: 0 auto; padding: var(--space-8) var(--space-6); }
+        .header { text-align: center; margin-bottom: var(--space-6); }
+        .title { font-size: var(--text-3xl); font-weight: var(--font-extrabold); }
+        .card { background: var(--duo-white); border-radius: var(--radius-2xl); padding: var(--space-6); box-shadow: var(--shadow-md); border: 2px solid var(--duo-gray-100); }
+        .field { margin-bottom: var(--space-4); }
+        .label { display: block; font-weight: var(--font-semibold); margin-bottom: var(--space-2); }
+        .input { width: 100%; padding: var(--space-3); border-radius: var(--radius-lg); border: 2px solid var(--duo-gray-200); }
+        .actions { display: flex; gap: var(--space-3); margin-top: var(--space-4); }
+        .footer { text-align: center; margin-top: var(--space-4); }
+        .error { color: var(--duo-red); font-weight: var(--font-semibold); }
+    </style>
+    <script>
+        function submitGuest() { document.getElementById('guestForm').submit(); }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Inicia sesión</div>
+            <p class="text-gray">Accede a la plataforma educativa</p>
+        </div>
+        <div class="card">
+            {% if error %}<div class="error">{{ error }}</div>{% endif %}
+            <form method="post">
+                <div class="field">
+                    <label class="label">Correo</label>
+                    <input class="input" type="email" name="email" required>
+                </div>
+                <div class="field">
+                    <label class="label">Contraseña</label>
+                    <input class="input" type="password" name="password" required>
+                </div>
+                <div class="actions">
+                    <button class="btn-duo btn-primary" type="submit">Entrar</button>
+                    <a class="btn-duo btn-outline" href="/auth/register">Crear cuenta</a>
+                    <button class="btn-duo btn-secondary" type="button" onclick="submitGuest()">Modo invitado</button>
+                </div>
+            </form>
+            <form id="guestForm" action="/auth/guest" method="post"></form>
+        </div>
+        <div class="footer">
+            <a href="/landing" class="btn-duo btn-ghost">Volver a la Landing</a>
+        </div>
+    </div>
+</body>
+</html>

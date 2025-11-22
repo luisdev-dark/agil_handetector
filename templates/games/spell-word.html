@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletrea la Palabra - ASL</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/duolingo-theme.css">
+    <link rel="stylesheet" href="/static/css/games/games-common.css">
+    <link rel="stylesheet" href="/static/css/games/animations.css">
+    <style>
+        body {
+            font-family: var(--font-family-base);
+            background: var(--duo-gray-50);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Word Slots Display */
+        .word-slots-container {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-3);
+            margin: var(--space-8) 0;
+            flex-wrap: wrap;
+        }
+
+        .letter-slot {
+            width: 70px;
+            height: 90px;
+            background: var(--duo-white);
+            border: 3px solid var(--duo-gray-200);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-5xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-gray-300);
+            transition: all var(--transition-base);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .letter-slot.filled {
+            background: linear-gradient(135deg, rgba(28, 176, 246, 0.1), rgba(28, 176, 246, 0.05));
+            border-color: var(--duo-blue);
+            color: var(--duo-blue);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .letter-slot.correct {
+            background: linear-gradient(135deg, rgba(88, 204, 2, 0.15), rgba(88, 204, 2, 0.05));
+            border-color: var(--duo-green);
+            color: var(--duo-green);
+            animation: bounce-in 0.5s ease;
+        }
+
+        .letter-slot.current {
+            border-color: var(--duo-blue);
+            border-width: 4px;
+            animation: pulse-ring 2s infinite;
+        }
+
+        /* Animated Points Counter */
+        .points-counter {
+            position: fixed;
+            top: var(--space-6);
+            right: var(--space-6);
+            background: var(--duo-white);
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--duo-green);
+            z-index: 100;
+        }
+
+        .points-counter-label {
+            font-size: var(--text-xs);
+            color: var(--duo-gray-600);
+            font-weight: var(--font-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-1);
+        }
+
+        .points-counter-value {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-extrabold);
+            color: var(--duo-green);
+            line-height: var(--leading-none);
+        }
+
+        .points-counter.animate {
+            animation: tada 0.8s ease;
+        }
+
+        /* Feedback Overlay */
+        .feedback-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--text-6xl);
+            font-weight: var(--font-extrabold);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: all var(--transition-base);
+        }
+
+        .feedback-overlay.show-correct {
+            color: var(--duo-green);
+            opacity: 1;
+            animation: bounce-in 0.5s ease;
+        }
+
+        .feedback-overlay.show-incorrect {
+            color: var(--duo-red);
+            opacity: 1;
+            animation: shake 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .letter-slot {
+                width: 50px;
+                height: 70px;
+                font-size: var(--text-4xl);
+            }
+
+            .word-slots-container {
+                gap: var(--space-2);
+            }
+
+            .points-counter {
+                top: var(--space-4);
+                right: var(--space-4);
+                padding: var(--space-3) var(--space-4);
+            }
+
+            .points-counter-value {
+                font-size: var(--text-3xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Points Counter -->
+    <div class="points-counter" id="pointsCounter">
+        <div class="points-counter-label">Puntos</div>
+        <div class="points-counter-value" id="pointsValue">0</div>
+    </div>
+
+    <!-- Target Word Display -->
+    <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 24px; font-weight: bold; color: #007bff; z-index: 1000;" id="targetWord">---</div>
+
+    <!-- Word Display Container -->
+    <div style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 1000;" id="wordDisplay"></div>
+
+    <!-- Feedback Indicator -->
+    <div style="position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 1000;" id="feedbackIndicator"></div>
+
+    <div class="game-container">
+        <!-- Game Header -->
+        <header class="game-header">
+            <h1>Deletrea la Palabra</h1>
+            <p>Forma cada letra de la palabra usando señas ASL</p>
+        </header>
+
+        <!-- Game Layout -->
+        <div class="game-layout">
+            <!-- Main Game Area -->
+            <div class="game-main">
+                <!-- Word Slots Display -->
+                <div class="word-slots-container" id="wordSlotsContainer">
+                    <!-- Letter slots will be generated here -->
+                </div>
+
+                <!-- Video Container -->
+                <div class="game-video-container" style="position: relative;">
+                    <video id="videoElement" autoplay muted></video>
+                    <div class="feedback-overlay" id="feedbackOverlay">✓</div>
+                </div>
+
+                <!-- Game Message -->
+                <div class="game-message info" id="gameMessage">
+                    Presiona "Iniciar Juego" para comenzar
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls">
+                    <button class="btn-duo btn-primary btn-lg" id="startBtn">Iniciar Juego</button>
+                    <button class="btn-duo btn-secondary btn-lg" id="restartBtn" disabled>Reintentar</button>
+                    <button class="btn-duo btn-outline" id="menuBtn" onclick="window.location.href='/games'">Menú</button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="game-sidebar">
+                <!-- Score Display -->
+                <div class="game-status">
+                    <h3>📊 Puntuación</h3>
+                    <div class="score-display">
+                        <div class="score-item">
+                            <span class="score-label">Puntos</span>
+                            <span class="score-value" id="scoreValue">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Letras Correctas</span>
+                            <span class="score-value" id="correctLetters">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Progreso</span>
+                            <span class="score-value" id="progressValue">0/0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="game-status">
+                    <h3>📈 Progreso</h3>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Completado</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Level & Points -->
+                <div class="level-display">
+                    <div class="level-label">Nivel</div>
+                    <div class="level-value" id="levelValue">1</div>
+                </div>
+
+                <div class="points-display">
+                    <div class="points-label">Puntos Totales</div>
+                    <div class="points-value" id="totalPoints">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen (Hidden by default) -->
+        <div class="results-screen hidden" id="resultsScreen">
+            <h2>🎉 ¡Palabra Completada!</h2>
+            <div class="results-stats">
+                <div class="result-stat highlight">
+                    <div class="result-stat-label">Puntos Ganados</div>
+                    <div class="result-stat-value" id="resultScore">0</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-label">Tiempo</div>
+                    <div class="result-stat-value" id="resultTime">0s</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-label">Precisión</div>
+                    <div class="result-stat-value" id="resultAccuracy">100%</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-label">Bonus</div>
+                    <div class="result-stat-value" id="resultBonus">0</div>
+                </div>
+            </div>
+
+            <!-- Badges Earned -->
+            <div class="badge-container" id="badgesEarned">
+                <!-- Badges will be shown here if earned -->
+            </div>
+
+            <div class="game-controls">
+                <button class="game-btn game-btn-start" onclick="location.reload()">Jugar de Nuevo</button>
+                <button class="game-btn game-btn-menu" onclick="window.location.href='/games'">Volver al Menú</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
+    <!-- Include Game Systems (lazy loaded) -->
+    <script>
+        // Lazy load game system scripts
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load essential scripts first
+        Promise.all([
+            loadScript('/static/js/games/storage-manager.js'),
+            loadScript('/static/js/games/points-system.js'),
+            loadScript('/static/js/games/achievements.js'),
+            loadScript('/static/js/games/ui-effects.js'),
+            loadScript('/static/js/games/game-engine.js')
+        ]).then(() => {
+            console.log('Essential game scripts loaded');
+            // Load game-specific script after essentials
+            return loadScript('/static/js/games/spell-word.js');
+        }).then(() => {
+            console.log('Spell word game script loaded');
+        }).catch(error => {
+            console.error('Error loading scripts:', error);
+        });
+    </script>
+</body>
+</html>

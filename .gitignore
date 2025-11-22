@@ -1,0 +1,40 @@
+# Modelos entrenados (muy pesados)
+*.h5
+*.pkl
+*.joblib
+
+# Datasets
+asl_dataset/
+dataset/
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.zip
+*.rar
+
+# Variables de entorno
+.env
